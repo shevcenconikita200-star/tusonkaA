@@ -1,12 +1,11 @@
 
+<?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
     <application
-        android:icon="@drawable/tushenka_icon"
         android:allowBackup="true"
+        android:icon="@drawable/tushenka_icon"
         android:label="Учёт тушёнки"
-        android:icon="@mipmap/ic_launcher"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:usesCleartextTraffic="false">
 
@@ -22,4 +21,6 @@
 
         </activity>
     </application>
+
 </manifest>
+
