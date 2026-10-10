@@ -3,7 +3,6 @@
 
     <application
         android:icon="@drawable/tushenka_icon"
-        android:roundIcon="@drawable/tushenka_icon"
         android:allowBackup="true"
         android:label="Учёт тушёнки"
         android:icon="@mipmap/ic_launcher"
