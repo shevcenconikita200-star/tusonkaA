@@ -1,42 +1,83 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#176b45">
-<title>Тушёнка — учёт и продажи</title>
+<meta name="theme-color" content="#0b2419">
+<title>Учёт тушёнки</title>
 <style>
-:root{color-scheme:dark;--bg:#0b2419;--panel:#123526;--text:#f1f5f2;--muted:#a5c2b0;--line:#28563e;--green:#176b45;--green2:#218655;--red:#ef7777;--soft:#194632;--shadow:0 8px 24px #00000020}218655;--red:#c94242;--soft:light-dark(#e8f4ec,#243b2d);--shadow:0 8px 24px #0000000b}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
-.app{max-width:620px;margin:0 auto;min-height:100dvh;padding:0 16px 30px}
-header{margin:0 -16px 18px;padding:20px 18px 16px;background:var(--green);color:#fff}
-.brand{display:flex;align-items:center;gap:12px}.logo{width:46px;height:46px;border-radius:14px;background:#ffffff22;display:grid;place-items:center;font-size:26px}.brand h1{font-size:20px;margin:0}.brand p{font-size:12px;margin:3px 0 0;color:#dcefe3}
-nav{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:18px}
-nav button{border:1px solid #ffffff45;background:#ffffff12;color:#fff;border-radius:11px;padding:10px 4px;font-weight:700;font-size:13px}
-nav button.active{background:#fff;color:var(--green)}
-.page{display:none}.page.active{display:block}
-h2{font-size:22px;margin:8px 0 5px}.intro{color:var(--muted);font-size:14px;line-height:1.45;margin:0 0 18px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:16px;margin-bottom:13px;box-shadow:var(--shadow)}
-.cardhead{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}.cardhead h3{margin:0;font-size:17px}.price{font-size:13px;color:var(--muted);white-space:nowrap}
-label{display:block;color:var(--muted);font-size:13px;margin-bottom:6px}
-input{width:100%;min-width:0;background:var(--bg);color:var(--text);border:1px solid var(--line);border-radius:12px;padding:13px 12px;font-size:18px;font-weight:650;outline:none}
-input:focus{border-color:var(--green2);box-shadow:0 0 0 3px #21865522}
-.checkline{display:flex;align-items:center;gap:10px;margin-top:14px;color:var(--text);font-size:14px;font-weight:650}.checkline input{width:20px;height:20px;min-width:20px;margin:0;accent-color:var(--green)}
-.field{margin-bottom:12px}.field:last-child{margin-bottom:0}
-.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-button.primary,button.secondary,button.danger{width:100%;border:0;border-radius:13px;padding:14px 12px;font-size:15px;font-weight:750;cursor:pointer}
-.primary{background:var(--green);color:#fff}.secondary{background:var(--soft);color:var(--green)}.danger{background:light-dark(#fff0f0,#3a2222);color:var(--red);border:1px solid light-dark(#f2cccc,#643535)!important}
-.smallnote{color:var(--muted);font-size:12px;line-height:1.5;margin-top:10px}
-.bigtotal{background:var(--soft);border-radius:15px;padding:15px;margin:14px 0}.bigtotal .caption{font-size:12px;color:var(--muted);font-weight:750;text-transform:uppercase;letter-spacing:.04em}.bigtotal strong{display:block;font-size:30px;color:var(--green);margin-top:4px}
-.statgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px}.stat{background:var(--bg);border:1px solid var(--line);border-radius:13px;padding:12px}.stat span{display:block;color:var(--muted);font-size:12px}.stat strong{display:block;font-size:21px;margin-top:4px}
-.stockline{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--line)}.stockline:last-child{border:0}.stockline span{color:var(--muted)}.stockline strong{text-align:right}
-.saleitem{display:grid;grid-template-columns:1fr 115px;gap:12px;align-items:center}.saleitem h3{font-size:16px;margin:0 0 4px}.saleitem p{font-size:12px;color:var(--muted);margin:0}.saleitem input{text-align:center}
-.warning{display:none;border-radius:12px;background:light-dark(#fff0e0,#3a2c1c);color:light-dark(#874800,#ffd49a);padding:11px;font-size:13px;margin:10px 0}
-.sale{border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px}.salehead{display:flex;justify-content:space-between;gap:10px;font-weight:750}.salehead small{color:var(--muted);font-weight:500}.sale p{font-size:13px;color:var(--muted);line-height:1.5;margin:8px 0 0}
-.empty{color:var(--muted);font-size:14px;text-align:center;padding:20px 8px}
-.toast{position:fixed;bottom:20px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:#18231c;color:#fff;padding:12px 17px;border-radius:12px;font-size:14px;transition:.2s;max-width:90%;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:10px}
-@media(min-width:520px){.app{padding-left:22px;padding-right:22px}header{margin-left:-22px;margin-right:-22px;padding-left:24px;padding-right:24px}}
+:root {
+  color-scheme: dark;
+  --bg:#0b2419;
+  --panel:#123526;
+  --text:#f1f5f2;
+  --muted:#a5c2b0;
+  --line:#28563e;
+  --green:#176b45;
+  --green2:#218655;
+  --red:#ef7777;
+  --soft:#194632;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+.app{max-width:620px;margin:auto;padding:0 12px 30px}
+header{margin:0 -12px 18px;padding:20px;background:linear-gradient(135deg,#176b45,#0b2419);border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{font-size:30px}
+h1{font-size:21px;margin:0}
+header p{font-size:12px;color:#dcefe3;margin:4px 0 0}
+nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:18px}
+nav button{padding:11px 3px;border:1px solid #ffffff45;border-radius:11px;background:#ffffff12;color:white;font-weight:bold}
+nav button.active{background:white;color:var(--green)}
+.page{display:none}
+.page.active{display:block}
+h2{font-size:22px;margin:8px 0}
+.intro,.smallnote{color:var(--muted);font-size:13px;line-height:1.5}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:12px}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:12px}
+.cardhead h3{font-size:16px;margin:0}
+.price{font-size:12px;color:var(--muted)}
+label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+input{width:100%;min-width:0;max-width:100%;padding:9px 8px;background:var(--bg);border:1px solid var(--line);border-radius:10px;color:var(--text);font-size:16px}
+input:focus{outline:1px solid var(--green2)}
+input::placeholder{color:#789382}
+.field{margin-bottom:12px}
+.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+.row>div{min-width:0}
+.row input{text-align:center;padding:9px 3px}
+.checkline{display:flex;align-items:center;gap:9px;margin:12px 0;color:var(--text)}
+.checkline input{width:19px;height:19px;accent-color:var(--green)}
+button.primary,button.secondary,button.danger{width:100%;padding:13px;border:0;border-radius:12px;font-size:15px;font-weight:bold;cursor:pointer}
+.primary{background:var(--green);color:white}
+.secondary{background:var(--soft);color:white}
+.danger{background:#3a2222;color:var(--red)}
+.smallnote{margin-top:9px}
+.bigtotal{background:var(--soft);padding:14px;border-radius:13px;margin:13px 0}
+.bigtotal .caption{font-size:12px;color:var(--muted)}
+.bigtotal strong{display:block;font-size:27px;color:#70dfa0;margin-top:5px;overflow-wrap:anywhere}
+.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:10px;min-width:0}
+.stat span{font-size:12px;color:var(--muted)}
+.stat strong{display:block;margin-top:5px;font-size:18px;overflow-wrap:anywhere}
+.stockline{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
+.stockline:last-child{border:0}
+.stockline span{color:var(--muted);font-size:13px}
+.stockline strong{text-align:right;overflow-wrap:anywhere}
+.saleitem{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,112px);gap:8px;align-items:center}
+.saleitem h3{font-size:15px;margin:0 0 5px}
+.saleitem p{font-size:12px;color:var(--muted);margin:0}
+.saleitem>div{min-width:0}
+.warning{display:none;background:#3a2c1c;color:#ffd49a;padding:10px;border-radius:10px;font-size:13px}
+.sale{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:9px}
+.salehead{display:flex;justify-content:space-between;gap:8px;font-weight:bold}
+.salehead small{color:var(--muted);font-weight:normal;text-align:right}
+.sale p{font-size:13px;color:var(--muted);line-height:1.6}
+.empty{text-align:center;color:var(--muted);padding:20px}
+.toast{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);display:none;background:#243b2d;color:white;padding:12px 16px;border-radius:12px;max-width:90%;z-index:5}
+.toast.show{display:block}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:15px}
+@media(max-width:360px){.card{padding:11px}.saleitem{grid-template-columns:minmax(0,1fr) 105px}.row{gap:4px}.row input{font-size:15px}}
 </style>
 </head>
 <body>
@@ -51,22 +92,23 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:10px}
 </header>
 
 <section id="page-buy" class="page active">
- <h2>Сколько ящиков было?</h2>
- <p class="intro">Введи количество ящиков, которые привёз. В каждом ящике 13 банок. Нажми кнопку — банки добавятся в остаток.</p>
+ <h2>Закупка тушёнки</h2>
+ <p class="intro">В одном ящике 13 банок. Введи количество ящиков.</p>
  <div class="card">
-  <div class="cardhead"><h3>🐔 Куриная тушёнка</h3><span class="price">85 лей / банка</span></div>
-  <div class="field"><label for="buyChicken">Количество ящиков</label><input id="buyChicken" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
-  <div class="smallnote">Банок будет добавлено: <strong id="buyChickenTotal">0</strong></div>
+  <div class="cardhead"><h3>🐔 Куриная</h3><span class="price">85 лей/банка</span></div>
+  <label for="buyChicken">Количество ящиков</label>
+  <input id="buyChicken" type="number" min="0" step="1" placeholder="Количество">
+  <p class="smallnote">Будет добавлено банок: <b id="buyChickenTotal">0</b></p>
  </div>
  <div class="card">
-  <div class="cardhead"><h3>🐷 Свиная тушёнка</h3><span class="price">95 лей / банка</span></div>
-  <div class="field"><label for="buyPork">Количество ящиков</label><input id="buyPork" type="number" min="0" step="1" inputmode="numeric" value="0"></div>
-  <div class="smallnote">Банок будет добавлено: <strong id="buyPorkTotal">0</strong></div>
+  <div class="cardhead"><h3>🐷 Свиная</h3><span class="price">95 лей/банка</span></div>
+  <label for="buyPork">Количество ящиков</label>
+  <input id="buyPork" type="number" min="0" step="1" placeholder="Количество">
+  <p class="smallnote">Будет добавлено банок: <b id="buyPorkTotal">0</b></p>
  </div>
- <button class="primary" id="addStock">Добавить ящики в остаток</button>
- <p class="smallnote">Добавление сохраняется в этом браузере на телефоне. Можно пополнять остаток несколько раз.</p>
- <div class="card">
-  <div class="cardhead"><h3>Текущий остаток</h3></div>
+ <button class="primary" id="addStock">Добавить в остаток</button>
+ <div class="card" style="margin-top:13px">
+  <h3>Текущий остаток</h3>
   <div class="stockline"><span>🐔 Курица</span><strong id="stockChickenBuy">0 банок</strong></div>
   <div class="stockline"><span>🐷 Свинина</span><strong id="stockPorkBuy">0 банок</strong></div>
   <div class="stockline"><span>Всего</span><strong id="stockAllBuy">0 банок</strong></div>
@@ -75,222 +117,255 @@ footer{text-align:center;color:var(--muted);font-size:11px;padding:10px}
 
 <section id="page-sell" class="page">
  <h2>Новая продажа</h2>
- <p class="intro">Введи, сколько банок отдал покупателю. Когда нажмёшь «Завершить продажу», остаток уменьшится, а сумма попадёт в отчёт.</p>
+ <p class="intro">Укажи количество ящиков и отдельных банок.</p>
  <div class="card">
-  <div class="field"><label for="clientName">Имя клиента (необязательно)</label><input id="clientName" type="text" maxlength="80" placeholder="Например, Иван"></div>
+  <label for="clientName">Имя клиента (необязательно)</label>
+  <input id="clientName" type="text" placeholder="Имя клиента">
   <label class="checkline"><input id="paidByCard" type="checkbox"> Оплата картой</label>
-  <div class="saleitem"><div><h3>🐔 Куриная</h3><p>85 лей за банку · в наличии <b id="sellChickenStock">0</b></p></div><div class="row"><div><label for="sellChickenBoxes">Ящиков</label><input id="sellChickenBoxes" type="number" min="0" step="1" inputmode="numeric" value="0"></div><div><label for="sellChickenCans">Отдельных банок</label><input id="sellChickenCans" type="number" min="0" step="1" inputmode="numeric" value="0"></div></div></div>
-  <div class="smallnote">Сумма: <strong id="sellChickenSum">0 лей</strong></div>
+  <div class="saleitem">
+   <div><h3>🐔 Куриная</h3><p>85 лей/банка · в наличии <b id="sellChickenStock">0</b></p></div>
+   <div class="row">
+    <div><label for="sellChickenBoxes">Ящиков</label><input id="sellChickenBoxes" type="number" min="0" placeholder="0"></div>
+    <div><label for="sellChickenCans">Банок</label><input id="sellChickenCans" type="number" min="0" placeholder="0"></div>
+   </div>
+  </div>
+  <p class="smallnote">Сумма: <b id="sellChickenSum">0 лей</b></p>
  </div>
  <div class="card">
-  <div class="saleitem"><div><h3>🐷 Свиная</h3><p>95 лей за банку · в наличии <b id="sellPorkStock">0</b></p></div><div class="row"><div><label for="sellPorkBoxes">Ящиков</label><input id="sellPorkBoxes" type="number" min="0" step="1" inputmode="numeric" value="0"></div><div><label for="sellPorkCans">Отдельных банок</label><input id="sellPorkCans" type="number" min="0" step="1" inputmode="numeric" value="0"></div></div></div>
-  <div class="smallnote">Сумма: <strong id="sellPorkSum">0 лей</strong></div>
+  <div class="saleitem">
+   <div><h3>🐷 Свиная</h3><p>95 лей/банка · в наличии <b id="sellPorkStock">0</b></p></div>
+   <div class="row">
+    <div><label for="sellPorkBoxes">Ящиков</label><input id="sellPorkBoxes" type="number" min="0" placeholder="0"></div>
+    <div><label for="sellPorkCans">Банок</label><input id="sellPorkCans" type="number" min="0" placeholder="0"></div>
+   </div>
+  </div>
+  <p class="smallnote">Сумма: <b id="sellPorkSum">0 лей</b></p>
  </div>
  <div class="warning" id="sellWarning"></div>
- <div class="bigtotal"><div class="caption">Сумма этой продажи</div><strong id="sellTotal">0 лей</strong></div>
+ <div class="bigtotal"><div class="caption">Итого за продажу</div><strong id="sellTotal">0 лей</strong></div>
  <button class="primary" id="finishSale">Завершить продажу</button>
- <p class="smallnote">После завершения продажа запишется в отчёт. Проверь количество перед подтверждением.</p>
 </section>
 
 <section id="page-report" class="page">
  <h2>Отчёт</h2>
- <p class="intro">Сводка по проданным банкам, сумме и тому, что осталось.</p>
  <div class="card">
-  <div class="cardhead"><h3>Продано всего</h3></div>
+  <h3>Продано</h3>
   <div class="statgrid">
-   <div class="stat"><span>🐔 Курицы, банок</span><strong id="reportChickenSold">0</strong></div>
-   <div class="stat"><span>🐷 Свинины, банок</span><strong id="reportPorkSold">0</strong></div>
+   <div class="stat"><span>Курицы, банок</span><strong id="reportChickenSold">0</strong></div>
+   <div class="stat"><span>Свинины, банок</span><strong id="reportPorkSold">0</strong></div>
    <div class="stat"><span>Сумма за курицу</span><strong id="reportChickenMoney">0 лей</strong></div>
    <div class="stat"><span>Сумма за свинину</span><strong id="reportPorkMoney">0 лей</strong></div>
   </div>
   <div class="bigtotal"><div class="caption">Общая сумма продаж</div><strong id="reportTotalMoney">0 лей</strong></div>
  </div>
  <div class="card">
-  <div class="cardhead"><h3>Что осталось на складе</h3></div>
-  <div class="stockline"><span>🐔 Курица</span><strong id="reportChickenStock">0 банок</strong></div>
-  <div class="stockline"><span>🐷 Свинина</span><strong id="reportPorkStock">0 банок</strong></div>
+  <h3>Остаток на складе</h3>
+  <div class="stockline"><span>Курица</span><strong id="reportChickenStock">0 банок</strong></div>
+  <div class="stockline"><span>Свинина</span><strong id="reportPorkStock">0 банок</strong></div>
   <div class="stockline"><span>Всего банок</span><strong id="reportTotalStock">0</strong></div>
-  <div class="stockline"><span>Стоимость остатка курицы</span><strong id="reportChickenStockValue">0 лей</strong></div>
-  <div class="stockline"><span>Стоимость остатка свинины</span><strong id="reportPorkStockValue">0 лей</strong></div>
+  <div class="stockline"><span>Стоимость курицы</span><strong id="reportChickenStockValue">0 лей</strong></div>
+  <div class="stockline"><span>Стоимость свинины</span><strong id="reportPorkStockValue">0 лей</strong></div>
   <div class="stockline"><span>Общая стоимость остатка</span><strong id="reportStockValue">0 лей</strong></div>
-  <div class="stockline"><span>Курица — ящики + банки</span><strong id="reportChickenBoxes">0 ящ. · 0 бан.</strong></div>
-  <div class="stockline"><span>Свинина — ящики + банки</span><strong id="reportPorkBoxes">0 ящ. · 0 бан.</strong></div>
+  <div class="stockline"><span>Курица: ящики и банки</span><strong id="reportChickenBoxes">0 ящ. · 0 бан.</strong></div>
+  <div class="stockline"><span>Свинина: ящики и банки</span><strong id="reportPorkBoxes">0 ящ. · 0 бан.</strong></div>
  </div>
  <div class="card">
-  <div class="cardhead"><h3>Касса и расходы</h3></div>
-  <div class="stockline"><span>Оплачено картой (не входит в кассу)</span><strong id="reportCardMoney">0 лей</strong></div>
-  <div class="stockline"><span>Наличные продажи / сумма кассы до расходов</span><strong id="reportCashGross">0 лей</strong></div>
-  <div class="field"><label for="cashExpenses">Расходы (лей)</label><input id="cashExpenses" type="number" min="0" step="1" inputmode="decimal" value="0"></div>
-  <div class="field"><label for="fuelExpenses">Топливо (лей)</label><input id="fuelExpenses" type="number" min="0" step="1" inputmode="decimal" value="0"></div>
-  <div class="bigtotal"><div class="caption">Должно остаться в кассе</div><strong id="reportCashRemaining">0 лей</strong></div>
-  <p class="smallnote">Оплата картой учитывается отдельно. Из наличной кассы вычитаются расходы и топливо.</p>
+  <h3>Касса и расходы</h3>
+  <div class="stockline"><span>Оплата картой</span><strong id="reportCardMoney">0 лей</strong></div>
+  <div class="stockline"><span>Наличные до расходов</span><strong id="reportCashGross">0 лей</strong></div>
+  <label for="cashExpenses">Расходы, лей</label>
+  <input id="cashExpenses" type="number" min="0" placeholder="Сумма">
+  <label for="fuelExpenses" style="margin-top:12px">Топливо, лей</label>
+  <input id="fuelExpenses" type="number" min="0" placeholder="Сумма">
+  <div class="bigtotal"><div class="caption">Остаток наличных</div><strong id="reportCashRemaining">0 лей</strong></div>
  </div>
  <div class="card">
   <div class="cardhead"><h3>История продаж</h3><span class="price" id="saleCount">0 продаж</span></div>
   <div id="salesHistory"><div class="empty">Продаж пока нет.</div></div>
  </div>
  <button class="secondary" id="copyReport">Скопировать отчёт</button>
- <p style="height:8px"></p>
+ <p></p>
  <button class="danger" id="resetAll">Сбросить весь учёт</button>
- <p class="smallnote">Сброс удалит остатки и историю продаж только в этом браузере.</p>
 </section>
 <footer>13 банок в ящике · Все суммы в леях</footer>
 </div>
 <div class="toast" id="toast"></div>
+
 <script>
-const BOX_SIZE = 13;
-const PRICE = {chicken: 85, pork: 95};
-const NAME = {chicken: 'Куриная', pork: 'Свиная'};
-const STORE_KEY = 'tushenka-accounting-v2';
-const el = id => document.getElementById(id);
-const num = id => Math.max(0, Math.floor(Number(el(id).value) || 0));
-const saleQty = kind => num('sell' + kind + 'Boxes') * BOX_SIZE + num('sell' + kind + 'Cans');
-const fmt = n => Math.round(n).toLocaleString('ru-RU');
-const money = n => fmt(n) + ' лей';
-let data = loadData();
+const BOX_SIZE=13;
+const PRICE={chicken:85,pork:95};
+const STORE_KEY='tushenka-accounting-v2';
+const el=id=>document.getElementById(id);
+const num=id=>Math.max(0,Math.floor(Number(el(id).value)||0));
+const saleQty=kind=>num('sell'+kind+'Boxes')*BOX_SIZE+num('sell'+kind+'Cans');
+const fmt=n=>Math.round(n).toLocaleString('ru-RU');
+const money=n=>fmt(n)+' лей';
 
-function loadData() {
- try {
-  const saved = JSON.parse(localStorage.getItem(STORE_KEY) || '{}');
+function loadData(){
+ try{
+  const s=JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
   return {
-   stock: {chicken: Math.max(0, Number(saved.stock?.chicken) || 0), pork: Math.max(0, Number(saved.stock?.pork) || 0)},
-   sold: {chicken: Math.max(0, Number(saved.sold?.chicken) || 0), pork: Math.max(0, Number(saved.sold?.pork) || 0)},
-   sales: Array.isArray(saved.sales) ? saved.sales : [],
-   expenses: Math.max(0, Number(saved.expenses) || 0),
-   fuel: Math.max(0, Number(saved.fuel) || 0)
+   stock:{chicken:Number(s.stock?.chicken)||0,pork:Number(s.stock?.pork)||0},
+   sold:{chicken:Number(s.sold?.chicken)||0,pork:Number(s.sold?.pork)||0},
+   sales:Array.isArray(s.sales)?s.sales:[],
+   expenses:Number(s.expenses)||0,
+   fuel:Number(s.fuel)||0
   };
- } catch(e) { return {stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0}; }
+ }catch(e){
+  return {stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0};
+ }
 }
-function saveData() { localStorage.setItem(STORE_KEY, JSON.stringify(data)); }
-function showToast(message) {
- const t = el('toast'); t.textContent = message; t.classList.add('show');
- setTimeout(() => t.classList.remove('show'), 2200);
+let data=loadData();
+function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data))}
+function toast(message){
+ const t=el('toast');t.textContent=message;t.classList.add('show');
+ setTimeout(()=>t.classList.remove('show'),2200);
 }
-function setPage(page) {
- document.querySelectorAll('.page').forEach(p => p.classList.toggle('active', p.id === 'page-' + page));
- document.querySelectorAll('nav button').forEach(b => b.classList.toggle('active', b.dataset.page === page));
- if (page === 'report') renderReport();
- if (page === 'sell') renderSell();
- window.scrollTo({top:0, behavior:'smooth'});
+function setPage(page){
+ document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
+ document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
+ if(page==='sell')renderSell();
+ if(page==='report')renderReport();
+ window.scrollTo({top:0,behavior:'smooth'});
 }
-document.querySelectorAll('nav button').forEach(b => b.addEventListener('click', () => setPage(b.dataset.page)));
+document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
 
-function renderBuy() {
- el('buyChickenTotal').textContent = fmt(num('buyChicken') * BOX_SIZE);
- el('buyPorkTotal').textContent = fmt(num('buyPork') * BOX_SIZE);
- el('stockChickenBuy').textContent = fmt(data.stock.chicken) + ' банок';
- el('stockPorkBuy').textContent = fmt(data.stock.pork) + ' банок';
- el('stockAllBuy').textContent = fmt(data.stock.chicken + data.stock.pork) + ' банок';
+function renderBuy(){
+ el('buyChickenTotal').textContent=fmt(num('buyChicken')*BOX_SIZE);
+ el('buyPorkTotal').textContent=fmt(num('buyPork')*BOX_SIZE);
+ el('stockChickenBuy').textContent=fmt(data.stock.chicken)+' банок';
+ el('stockPorkBuy').textContent=fmt(data.stock.pork)+' банок';
+ el('stockAllBuy').textContent=fmt(data.stock.chicken+data.stock.pork)+' банок';
 }
-el('buyChicken').addEventListener('input', renderBuy);
-el('buyPork').addEventListener('input', renderBuy);
-el('addStock').addEventListener('click', () => {
- const cBoxes = num('buyChicken'), pBoxes = num('buyPork');
- if (cBoxes + pBoxes === 0) { showToast('Введи количество ящиков'); return; }
- data.stock.chicken += cBoxes * BOX_SIZE;
- data.stock.pork += pBoxes * BOX_SIZE;
+el('buyChicken').addEventListener('input',renderBuy);
+el('buyPork').addEventListener('input',renderBuy);
+
+el('addStock').addEventListener('click',()=>{
+ const c=num('buyChicken'),p=num('buyPork');
+ if(c+p===0){toast('Введи количество ящиков');return}
+ data.stock.chicken+=c*BOX_SIZE;
+ data.stock.pork+=p*BOX_SIZE;
  saveData();
- el('buyChicken').value = 0; el('buyPork').value = 0;
- renderBuy(); renderSell(); renderReport();
- showToast('Ящики добавлены в остаток');
+ el('buyChicken').value='';
+ el('buyPork').value='';
+ renderBuy();renderSell();renderReport();
+ toast('Ящики добавлены в остаток');
 });
 
-function renderSell() {
- el('sellChickenStock').textContent = fmt(data.stock.chicken);
- el('sellPorkStock').textContent = fmt(data.stock.pork);
- const c = saleQty('Chicken'), p = saleQty('Pork');
- el('sellChickenSum').textContent = money(c * PRICE.chicken);
- el('sellPorkSum').textContent = money(p * PRICE.pork);
- el('sellTotal').textContent = money(c * PRICE.chicken + p * PRICE.pork);
- const warnings = [];
- if (c > data.stock.chicken) warnings.push('Курицы не хватает: в наличии ' + data.stock.chicken + ', указано ' + c + '.');
- if (p > data.stock.pork) warnings.push('Свинины не хватает: в наличии ' + data.stock.pork + ', указано ' + p + '.');
- el('sellWarning').style.display = warnings.length ? 'block' : 'none';
- el('sellWarning').textContent = warnings.join(' ');
- el('finishSale').disabled = warnings.length > 0 || (c + p === 0);
- el('finishSale').style.opacity = el('finishSale').disabled ? '.55' : '1';
+function renderSell(){
+ el('sellChickenStock').textContent=fmt(data.stock.chicken);
+ el('sellPorkStock').textContent=fmt(data.stock.pork);
+ const c=saleQty('Chicken'),p=saleQty('Pork');
+ el('sellChickenSum').textContent=money(c*PRICE.chicken);
+ el('sellPorkSum').textContent=money(p*PRICE.pork);
+ el('sellTotal').textContent=money(c*PRICE.chicken+p*PRICE.pork);
+ const warnings=[];
+ if(c>data.stock.chicken)warnings.push('Не хватает курицы: есть '+data.stock.chicken+', указано '+c+'.');
+ if(p>data.stock.pork)warnings.push('Не хватает свинины: есть '+data.stock.pork+', указано '+p+'.');
+ el('sellWarning').style.display=warnings.length?'block':'none';
+ el('sellWarning').textContent=warnings.join(' ');
+ el('finishSale').disabled=warnings.length>0||(c+p===0);
+ el('finishSale').style.opacity=el('finishSale').disabled?'.55':'1';
 }
-['sellChickenBoxes','sellChickenCans','sellPorkBoxes','sellPorkCans'].forEach(id => el(id).addEventListener('input', renderSell));
-el('finishSale').addEventListener('click', () => {
- const c = saleQty('Chicken'), p = saleQty('Pork');
- if (c + p === 0) { showToast('Введи количество отданных банок'); return; }
- if (c > data.stock.chicken || p > data.stock.pork) { renderSell(); showToast('Проверь остаток на складе'); return; }
- const sale = {date:new Date().toISOString(), client:(el('clientName').value || '').trim(), chicken:c, pork:p, total:c*PRICE.chicken+p*PRICE.pork, card:el('paidByCard').checked};
- data.stock.chicken -= c; data.stock.pork -= p;
- data.sold.chicken += c; data.sold.pork += p;
+['sellChickenBoxes','sellChickenCans','sellPorkBoxes','sellPorkCans'].forEach(id=>el(id).addEventListener('input',renderSell));
+
+el('finishSale').addEventListener('click',()=>{
+ const c=saleQty('Chicken'),p=saleQty('Pork');
+ if(c+p===0){toast('Введи количество банок');return}
+ if(c>data.stock.chicken||p>data.stock.pork){renderSell();toast('Проверь остаток');return}
+ const sale={
+  date:new Date().toISOString(),
+  client:el('clientName').value.trim(),
+  chicken:c,pork:p,
+  total:c*85+p*95,
+  card:el('paidByCard').checked
+ };
+ data.stock.chicken-=c;data.stock.pork-=p;
+ data.sold.chicken+=c;data.sold.pork+=p;
  data.sales.unshift(sale);
  saveData();
- el('sellChickenBoxes').value = 0; el('sellChickenCans').value = 0;
- el('sellPorkBoxes').value = 0; el('sellPorkCans').value = 0; el('clientName').value = ''; el('paidByCard').checked = false;
- renderSell(); renderBuy(); renderReport();
- showToast('Продажа записана, остаток обновлён');
+ ['sellChickenBoxes','sellChickenCans','sellPorkBoxes','sellPorkCans'].forEach(id=>el(id).value='');
+ el('clientName').value='';
+ el('paidByCard').checked=false;
+ renderSell();renderBuy();renderReport();
+ toast('Продажа записана');
 });
 
-function boxesLabel(n) { return Math.floor(n / BOX_SIZE) + ' ящ. · ' + (n % BOX_SIZE) + ' бан.'; }
-function escapeHtml(value) { return String(value).replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch])); }
-function renderReport() {
- const cMoney = data.sold.chicken * PRICE.chicken, pMoney = data.sold.pork * PRICE.pork;
- const cStockValue = data.stock.chicken * PRICE.chicken, pStockValue = data.stock.pork * PRICE.pork;
- const cardMoney = data.sales.reduce((sum, s) => sum + (s.card ? Number(s.total) || 0 : 0), 0);
- const cashGross = data.sales.reduce((sum, s) => sum + (!s.card ? Number(s.total) || 0 : 0), 0);
- el('cashExpenses').value = data.expenses || 0; el('fuelExpenses').value = data.fuel || 0;
- el('reportCardMoney').textContent = money(cardMoney);
- el('reportCashGross').textContent = money(cashGross);
- el('reportCashRemaining').textContent = money(cashGross - data.expenses - data.fuel);
- el('reportChickenSold').textContent = fmt(data.sold.chicken);
- el('reportPorkSold').textContent = fmt(data.sold.pork);
- el('reportChickenMoney').textContent = money(cMoney);
- el('reportPorkMoney').textContent = money(pMoney);
- el('reportTotalMoney').textContent = money(cMoney + pMoney);
- el('reportChickenStock').textContent = fmt(data.stock.chicken) + ' банок';
- el('reportPorkStock').textContent = fmt(data.stock.pork) + ' банок';
- el('reportTotalStock').textContent = fmt(data.stock.chicken + data.stock.pork);
- el('reportChickenStockValue').textContent = money(cStockValue);
- el('reportPorkStockValue').textContent = money(pStockValue);
- el('reportStockValue').textContent = money(cStockValue + pStockValue);
- el('reportChickenBoxes').textContent = boxesLabel(data.stock.chicken);
- el('reportPorkBoxes').textContent = boxesLabel(data.stock.pork);
- el('saleCount').textContent = data.sales.length + (data.sales.length === 1 ? ' продажа' : ' продаж');
- const history = el('salesHistory');
- if (!data.sales.length) { history.innerHTML = '<div class="empty">Продаж пока нет.</div>'; }
- else {
-  history.innerHTML = data.sales.map((s, i) => {
-   const d = new Date(s.date);
-   const date = isNaN(d) ? '' : d.toLocaleString('ru-RU', {day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
-   const client = s.client ? ' · ' + escapeHtml(s.client) : '';
-   return '<div class="sale"><div class="salehead"><span>Продажа ' + (data.sales.length - i) + escapeHtml(client) + '</span><small>' + date + '</small></div><p>🐔 Курица: ' + s.chicken + ' бан. × 85 = ' + money(s.chicken*85) + '<br>🐷 Свинина: ' + s.pork + ' бан. × 95 = ' + money(s.pork*95) + '<br><b>Итого: ' + money(s.total) + '</b><br>Оплата: <b>' + (s.card ? 'картой' : 'наличными') + '</b></p></div>';
+function boxesLabel(n){return Math.floor(n/BOX_SIZE)+' ящ. · '+(n%BOX_SIZE)+' бан.'}
+function escapeHtml(v){
+ return String(v).replace(/[&<>"']/g,ch=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+}
+function renderReport(){
+ const cm=data.sold.chicken*85,pm=data.sold.pork*95;
+ const cv=data.stock.chicken*85,pv=data.stock.pork*95;
+ const card=data.sales.reduce((a,s)=>a+(s.card?Number(s.total)||0:0),0);
+ const cash=data.sales.reduce((a,s)=>a+(!s.card?Number(s.total)||0:0),0);
+ if(document.activeElement!==el('cashExpenses'))el('cashExpenses').value=data.expenses||'';
+ if(document.activeElement!==el('fuelExpenses'))el('fuelExpenses').value=data.fuel||'';
+ el('reportCardMoney').textContent=money(card);
+ el('reportCashGross').textContent=money(cash);
+ el('reportCashRemaining').textContent=money(cash-data.expenses-data.fuel);
+ el('reportChickenSold').textContent=fmt(data.sold.chicken);
+ el('reportPorkSold').textContent=fmt(data.sold.pork);
+ el('reportChickenMoney').textContent=money(cm);
+ el('reportPorkMoney').textContent=money(pm);
+ el('reportTotalMoney').textContent=money(cm+pm);
+ el('reportChickenStock').textContent=fmt(data.stock.chicken)+' банок';
+ el('reportPorkStock').textContent=fmt(data.stock.pork)+' банок';
+ el('reportTotalStock').textContent=fmt(data.stock.chicken+data.stock.pork);
+ el('reportChickenStockValue').textContent=money(cv);
+ el('reportPorkStockValue').textContent=money(pv);
+ el('reportStockValue').textContent=money(cv+pv);
+ el('reportChickenBoxes').textContent=boxesLabel(data.stock.chicken);
+ el('reportPorkBoxes').textContent=boxesLabel(data.stock.pork);
+ el('saleCount').textContent=data.sales.length+' продаж';
+ const history=el('salesHistory');
+ if(!data.sales.length){history.innerHTML='<div class="empty">Продаж пока нет.</div>'}
+ else{
+  history.innerHTML=data.sales.map((s,i)=>{
+   const d=new Date(s.date);
+   const date=isNaN(d)?'':d.toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});
+   const client=s.client?' · '+escapeHtml(s.client):'';
+   return '<div class="sale"><div class="salehead"><span>Продажа '+(data.sales.length-i)+client+'</span><small>'+date+'</small></div><p>🐔 Курица: '+s.chicken+' × 85 = '+money(s.chicken*85)+'<br>🐷 Свинина: '+s.pork+' × 95 = '+money(s.pork*95)+'<br><b>Итого: '+money(s.total)+'</b><br>Оплата: <b>'+(s.card?'картой':'наличными')+'</b></p></div>';
   }).join('');
  }
 }
-el('copyReport').addEventListener('click', async () => {
- const cardMoney = data.sales.reduce((sum, s) => sum + (s.card ? Number(s.total) || 0 : 0), 0);
- const cashGross = data.sales.reduce((sum, s) => sum + (!s.card ? Number(s.total) || 0 : 0), 0);
- const text = `ОТЧЁТ ПО ТУШЁНКЕ
+['cashExpenses','fuelExpenses'].forEach(id=>el(id).addEventListener('change',()=>{
+ data.expenses=Math.max(0,Number(el('cashExpenses').value)||0);
+ data.fuel=Math.max(0,Number(el('fuelExpenses').value)||0);
+ saveData();renderReport();toast('Расходы сохранены');
+}));
+
+el('copyReport').addEventListener('click',async()=>{
+ const card=data.sales.reduce((a,s)=>a+(s.card?Number(s.total)||0:0),0);
+ const cash=data.sales.reduce((a,s)=>a+(!s.card?Number(s.total)||0:0),0);
+ const text=`ОТЧЁТ ПО ТУШЁНКЕ
 Продано курицы: ${data.sold.chicken} банок — ${data.sold.chicken*85} лей
 Продано свинины: ${data.sold.pork} банок — ${data.sold.pork*95} лей
-Всего продано на: ${data.sold.chicken*85+data.sold.pork*95} лей
-Остаток курицы: ${data.stock.chicken} банок (${boxesLabel(data.stock.chicken)})
-Остаток свинины: ${data.stock.pork} банок (${boxesLabel(data.stock.pork)})
-Оплата картой (отдельно): ${cardMoney} лей
-Наличная касса до расходов: ${cashGross} лей
+Всего продаж: ${data.sold.chicken*85+data.sold.pork*95} лей
+Остаток курицы: ${data.stock.chicken} банок
+Остаток свинины: ${data.stock.pork} банок
+Оплата картой: ${card} лей
+Наличные до расходов: ${cash} лей
 Расходы: ${data.expenses} лей
 Топливо: ${data.fuel} лей
-Должно остаться в кассе: ${cashGross-data.expenses-data.fuel} лей
+Остаток кассы: ${cash-data.expenses-data.fuel} лей
 Продаж записано: ${data.sales.length}`;
- try { await navigator.clipboard.writeText(text); showToast('Отчёт скопирован'); }
- catch(e) { const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();showToast('Отчёт скопирован'); }
+ try{await navigator.clipboard.writeText(text);toast('Отчёт скопирован')}
+ catch(e){
+  const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Отчёт скопирован');
+ }
 });
-['cashExpenses','fuelExpenses'].forEach(id => el(id).addEventListener('change', () => {
- data.expenses = Math.max(0, Number(el('cashExpenses').value) || 0);
- data.fuel = Math.max(0, Number(el('fuelExpenses').value) || 0);
- saveData(); renderReport(); showToast('Расходы сохранены');
-}));
-el('resetAll').addEventListener('click', () => {
- if (!confirm('Точно сбросить остатки и всю историю продаж? Это нельзя отменить.')) return;
- data = {stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0};
- saveData(); renderBuy(); renderSell(); renderReport(); showToast('Учёт сброшен');
+
+el('resetAll').addEventListener('click',()=>{
+ if(!confirm('Точно сбросить остатки и историю продаж? Это нельзя отменить.'))return;
+ data={stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0};
+ saveData();renderBuy();renderSell();renderReport();toast('Учёт сброшен');
 });
-renderBuy(); renderSell(); renderReport();
+
+renderBuy();
+renderSell();
+renderReport();
 </script>
 </body>
 </html>
