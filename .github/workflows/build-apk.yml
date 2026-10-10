@@ -35,7 +35,7 @@ jobs:
       - name: Build APK
         run: |
           cd TushenkaAPK
-          gradle assembleDebug
+          gradle assembleDebug --stacktrace --info
 
       - name: Upload APK
         if: success()
