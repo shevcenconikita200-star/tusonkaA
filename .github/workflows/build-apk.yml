@@ -22,7 +22,7 @@ jobs:
           java-version: '17'
 
       - name: Build APK
-        run: cd TushenkaAPK && chmod +x gradlew && ./gradlew assembleDebug
+        run: find . -name gradlew -type f
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
