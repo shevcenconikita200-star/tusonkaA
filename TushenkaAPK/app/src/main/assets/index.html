@@ -6,37 +6,109 @@
 <meta name="theme-color" content="#0b2419">
 <title>Учёт тушёнки</title>
 <style>
-:root{color-scheme:dark;--bg:#111513;--panel:#1b211e;--panel2:#202923;--text:#f2f6f2;--muted:#a1afa5;--line:#303d34;--green:#218653;--green2:#36b875;--red:#ff8888;--soft:#263b2e;--chicken:#e4bd66;--pork:#d28c9a}
+:root{color-scheme:light;--bg:#f5f6f4;--panel:#fff;--panel2:#f0f2ef;--text:#202520;--muted:#727a72;--line:#e2e6e0;--green:#267547;--green2:#328653;--red:#b83c3c;--soft:#eaf3ec;--chicken:#9a6b12;--pork:#a64f60}
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Arial,sans-serif;font-size:15px}
-.app{max-width:620px;margin:auto;padding:0 12px 100px}
-header{margin:0 -12px 15px;padding:19px 16px 17px;background:linear-gradient(145deg,#26382d,#171d19 75%);border-bottom:1px solid #34453a}
-.brand{display:flex;align-items:center;gap:12px}.logo{display:grid;place-items:center;width:46px;height:46px;border-radius:15px;background:#2b5139;font-size:26px;box-shadow:inset 0 0 0 1px #477355}
-h1{font-size:21px;letter-spacing:-.4px;margin:0;font-weight:750}header p{font-size:12px;color:#a9c5b2;margin:4px 0 0}
-nav{position:fixed;z-index:10;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:5px;padding:9px 12px calc(9px + env(safe-area-inset-bottom));background:#171d19f5;border-top:1px solid #35443a;backdrop-filter:blur(14px);max-width:620px;margin:auto}
-nav button{min-width:0;padding:8px 2px 7px;border:1px solid transparent;border-radius:14px;background:transparent;color:#9eada2;font-size:11px;font-weight:650;cursor:pointer;transition:background .18s,color .18s,transform .18s}
-nav button.active{background:#254b33;border-color:#356a47;color:#eaffef}nav button:active,button:active{transform:scale(.98)}
-.page{display:none}.page.active{display:block;animation:pageIn .22s ease-out}@keyframes pageIn{from{opacity:.35;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-h2{font-size:22px;letter-spacing:-.45px;margin:8px 0}.intro,.smallnote{color:var(--muted);font-size:12px;line-height:1.45}.intro{margin:0 0 14px}
-.card{background:linear-gradient(145deg,#1e2621,#191f1c);border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:10px;box-shadow:0 5px 16px #00000012}
-.cardhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:11px}.cardhead h3,.card h3{font-size:15px;margin:0;font-weight:720}.price{font-size:12px;color:var(--muted);white-space:nowrap}
-label{display:block;color:#b2beb5;font-size:12px;font-weight:600;margin:0 0 6px}
-input{width:100%;min-width:0;max-width:100%;padding:12px 11px;background:#111613;border:1px solid #39473d;border-radius:12px;color:var(--text);font:inherit;font-size:16px;transition:border-color .18s,box-shadow .18s}
-input:focus{outline:none;border-color:var(--green2);box-shadow:0 0 0 3px #36b87520}input::placeholder{color:#6f7d73}
-.field{margin-bottom:12px}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.row>div{min-width:0}.row input{text-align:center;padding:11px 3px}
-.checkline{display:flex;align-items:center;gap:9px;margin:12px 0;color:var(--text);font-size:13px}.checkline input{width:19px;height:19px;padding:0;accent-color:var(--green2)}
-button.primary,button.secondary,button.danger,button.mini{width:100%;padding:13px;border:0;border-radius:13px;font:inherit;font-size:14px;font-weight:750;cursor:pointer;transition:filter .18s,transform .18s,background .18s}
-button.primary{background:linear-gradient(135deg,#2ca364,#197546);color:white;box-shadow:0 5px 13px #14734330}button.primary:active{filter:brightness(1.12)}.secondary{background:#29372d;color:#d8e9dc;border:1px solid #3a4b3e!important}.danger{background:#3a2424;color:var(--red)}button.mini{width:auto;padding:8px 11px;font-size:12px;background:#3b2525;color:#ffaaaa}
-.smallnote{margin-top:8px}.bigtotal{background:linear-gradient(135deg,#243e2d,#1d3024);border:1px solid #345b40;padding:13px;border-radius:15px;margin:12px 0}.bigtotal .caption{font-size:11px;color:#b3cdb9}.bigtotal strong{display:block;font-size:27px;letter-spacing:-.6px;color:#7ce5a5;margin-top:4px;overflow-wrap:anywhere}
-.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{background:#151a17;border:1px solid #303c33;border-radius:14px;padding:12px;min-width:0}.stat span{font-size:11px;color:var(--muted);display:block;line-height:1.35}.stat strong{display:block;margin-top:6px;font-size:18px;letter-spacing:-.3px;overflow-wrap:anywhere}.dashboard{margin-bottom:15px}.dashboard-title{display:flex;align-items:center;justify-content:space-between;margin:5px 1px 10px}.dashboard-title h2{margin:0}.today-pill{font-size:10px;color:#a7dcb8;background:#213b2a;border:1px solid #34553d;border-radius:20px;padding:5px 8px}
+html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,Arial,sans-serif;font-size:15px;line-height:1.45}
+.app{max-width:620px;margin:auto;padding:0 16px 100px}
+header{margin:0 -16px 18px;padding:18px 18px 16px;background:#fff;border-bottom:1px solid var(--line)}
+.brand{display:flex;align-items:center;gap:10px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--soft);font-size:22px}
+h1{font-size:19px;letter-spacing:-.35px;margin:0;font-weight:750}header p{font-size:12px;color:var(--muted);margin:2px 0 0}
+nav{position:fixed;z-index:10;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#ffffffed;border-top:1px solid var(--line);backdrop-filter:blur(12px);max-width:620px;margin:auto}
+nav button{min-width:0;padding:7px 2px 6px;border:0;border-radius:10px;background:transparent;color:#737b73;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s,color .15s}
+nav button.active{background:var(--soft);color:var(--green)}nav button:active,button:active{transform:scale(.99)}
+.page{display:none}.page.active{display:block;animation:pageIn .16s ease-out}@keyframes pageIn{from{opacity:.6}to{opacity:1}}
+h2{font-size:22px;letter-spacing:-.45px;margin:8px 0}.intro,.smallnote{color:var(--muted);font-size:12px;line-height:1.5}.intro{margin:0 0 14px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:10px;box-shadow:none}
+.cardhead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:11px}.cardhead h3,.card h3{font-size:15px;margin:0;font-weight:700}.price{font-size:12px;color:var(--muted);white-space:nowrap}
+label{display:block;color:#626a62;font-size:12px;font-weight:600;margin:0 0 6px}
+input{width:100%;min-width:0;max-width:100%;padding:12px;background:#fff;border:1px solid #d9ded7;border-radius:10px;color:var(--text);font:inherit;font-size:16px;transition:border-color .15s}
+input:focus{outline:none;border-color:var(--green2);box-shadow:0 0 0 2px #32865318}input::placeholder{color:#9aa19a}
+.field{margin-bottom:12px}.row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.row>div{min-width:0}.row input{text-align:center;padding:11px 3px}
+.checkline{display:flex;align-items:center;gap:9px;margin:12px 0;color:var(--text);font-size:13px}.checkline input{width:18px;height:18px;padding:0;accent-color:var(--green)}
+button.primary,button.secondary,button.danger,button.mini{width:100%;padding:12px;border:0;border-radius:10px;font:inherit;font-size:14px;font-weight:700;cursor:pointer;transition:filter .15s,transform .15s}
+button.primary{background:var(--green);color:white;box-shadow:none}button.primary:active{filter:brightness(1.08)}.secondary{background:#f0f2ef;color:#303830;border:1px solid #e0e4de!important}.danger{background:#f9eaea;color:var(--red)}button.mini{width:auto;padding:7px 10px;font-size:12px;background:#f9eaea;color:var(--red)}
+.smallnote{margin-top:8px}.bigtotal{background:#edf5ee;border:1px solid #dceade;padding:13px;border-radius:12px;margin:12px 0}.bigtotal .caption{font-size:11px;color:#55735d}.bigtotal strong{display:block;font-size:25px;letter-spacing:-.5px;color:var(--green);margin-top:4px;overflow-wrap:anywhere}
+.statgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.stat{background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px;min-width:0}.stat span{font-size:11px;color:var(--muted);display:block;line-height:1.4}.stat strong{display:block;margin-top:5px;font-size:18px;letter-spacing:-.3px;overflow-wrap:anywhere}.dashboard{margin-bottom:16px}.dashboard-title{display:flex;align-items:center;justify-content:space-between;margin:5px 1px 10px}.dashboard-title h2{margin:0}.today-pill{font-size:10px;color:var(--green);background:var(--soft);border-radius:20px;padding:5px 8px}
 .stockline{display:flex;justify-content:space-between;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)}.stockline:last-child{border:0}.stockline span{color:var(--muted);font-size:12px}.stockline strong{text-align:right;overflow-wrap:anywhere;font-size:13px}
-.home-action-card{display:grid;grid-template-columns:42px minmax(0,1fr);gap:8px 11px;align-items:center;padding:13px}.home-action-icon{width:42px;height:42px;display:grid;place-items:center;border-radius:14px;background:#254b33;color:#9aefb6;font-size:25px;border:1px solid #356a47}.home-action-copy{min-width:0}.home-action-copy h3{font-size:15px;margin:0 0 4px}.home-action-copy p{font-size:12px;line-height:1.4;color:var(--muted);margin:0}.home-action-card button{grid-column:1/-1;margin-top:2px}.home-tip{padding-top:12px;padding-bottom:10px}.product-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:750}.product-tag.chicken{color:var(--chicken)}.product-tag.pork{color:var(--pork)}.product-dot{width:8px;height:8px;border-radius:50%;display:inline-block}.chicken .product-dot{background:var(--chicken)}.pork .product-dot{background:var(--pork)}
+.home-action-card{display:grid;grid-template-columns:38px minmax(0,1fr);gap:8px 10px;align-items:center;padding:13px}.home-action-icon{width:38px;height:38px;display:grid;place-items:center;border-radius:10px;background:var(--soft);color:var(--green);font-size:22px;border:0}.home-action-copy{min-width:0}.home-action-copy h3{font-size:15px;margin:0 0 3px}.home-action-copy p{font-size:12px;line-height:1.45;color:var(--muted);margin:0}.home-action-card button{grid-column:1/-1;margin-top:2px}.home-tip{padding-top:12px;padding-bottom:10px}.product-tag{display:inline-flex;align-items:center;gap:6px;font-size:13px;font-weight:750}.product-tag.chicken{color:var(--chicken)}.product-tag.pork{color:var(--pork)}.product-dot{width:8px;height:8px;border-radius:50%;display:inline-block}.chicken .product-dot{background:var(--chicken)}.pork .product-dot{background:var(--pork)}
 .saleitem{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,124px);gap:9px;align-items:center}.saleitem h3{font-size:14px;margin:0 0 5px}.saleitem p{font-size:11px;color:var(--muted);margin:0;line-height:1.5}.saleitem>div{min-width:0}
-.warning{display:none;background:#392d1c;color:#ffdda0;padding:11px;border-radius:12px;font-size:12px;border:1px solid #66502e}
-.sale{background:linear-gradient(145deg,#202722,#191e1b);border:1px solid #344137;border-radius:15px;padding:13px;margin-bottom:9px;animation:pageIn .2s ease-out}.salehead{display:flex;justify-content:space-between;gap:8px;font-weight:750;align-items:flex-start}.salehead small{color:var(--muted);font-weight:500;text-align:right;font-size:10px;white-space:nowrap}.sale p{font-size:12px;color:var(--muted);line-height:1.7;margin:10px 0}.sale p b{color:#edf5ee}.sale .sale-total{color:#7ce5a5;font-size:16px;font-weight:800}.sale-actions{display:flex;justify-content:flex-end}.empty{text-align:center;color:var(--muted);padding:18px 10px;font-size:12px}.toast{position:fixed;bottom:83px;left:50%;transform:translateX(-50%);display:none;background:#26372c;color:white;padding:12px 16px;border:1px solid #41604a;border-radius:13px;max-width:90%;z-index:20;box-shadow:0 8px 25px #0005}.toast.show{display:block;animation:pageIn .18s ease-out}footer{text-align:center;color:#738176;font-size:10px;padding:14px}
-.archive-item{border:1px solid var(--line);border-radius:13px;margin-bottom:8px;overflow:hidden}.archive-button{width:100%;text-align:left;background:#151a17;color:var(--text);border:0;padding:13px;cursor:pointer}.archive-button strong{display:block;margin-bottom:5px;font-size:13px}.archive-button span{font-size:11px;color:var(--muted)}.archive-detail{padding:12px;border-top:1px solid var(--line);font-size:12px;line-height:1.65}.cash-result{padding:12px;border-radius:13px;background:#151a17;border:1px solid var(--line);margin-top:10px}.cash-result strong{font-size:20px;display:block;margin-top:5px}.good{color:#7ce5a5}.bad{color:#ff9292}.archive-sale{border-bottom:1px solid var(--line);padding:8px 0}.archive-sale:last-child{border-bottom:0}
-@media(max-width:360px){.app{padding-left:9px;padding-right:9px}.card{padding:11px}.saleitem{grid-template-columns:minmax(0,1fr) 116px}.row{gap:5px}.row input{font-size:15px}.stat{padding:10px}.stat strong{font-size:16px}}
+.warning{display:none;background:#fff5e2;color:#8b5a12;padding:11px;border-radius:10px;font-size:12px;border:1px solid #f0dfb9}
+.sale{background:#fff;border:1px solid var(--line);border-radius:12px;padding:13px;margin-bottom:9px;animation:pageIn .16s ease-out}.salehead{display:flex;justify-content:space-between;gap:8px;font-weight:700;align-items:flex-start}.salehead small{color:var(--muted);font-weight:500;text-align:right;font-size:10px;white-space:nowrap}.sale p{font-size:12px;color:var(--muted);line-height:1.7;margin:10px 0}.sale p b{color:var(--text)}.sale .sale-total{color:var(--green);font-size:16px;font-weight:800}.sale-actions{display:flex;justify-content:flex-end}.empty{text-align:center;color:var(--muted);padding:18px 10px;font-size:12px}.toast{position:fixed;bottom:83px;left:50%;transform:translateX(-50%);display:none;background:#202820;color:white;padding:11px 15px;border-radius:10px;max-width:90%;z-index:20;box-shadow:0 4px 16px #0002}.toast.show{display:block;animation:pageIn .15s ease-out}footer{text-align:center;color:#8a928a;font-size:10px;padding:14px}
+.archive-item{border:1px solid var(--line);border-radius:11px;margin-bottom:8px;overflow:hidden}.archive-button{width:100%;text-align:left;background:#fff;color:var(--text);border:0;padding:13px;cursor:pointer}.archive-button strong{display:block;margin-bottom:5px;font-size:13px}.archive-button span{font-size:11px;color:var(--muted)}.archive-detail{padding:12px;border-top:1px solid var(--line);font-size:12px;line-height:1.65}.cash-result{padding:12px;border-radius:11px;background:#f7f8f6;border:1px solid var(--line);margin-top:10px}.cash-result strong{font-size:20px;display:block;margin-top:5px}.good{color:var(--green)}.bad{color:var(--red)}.archive-sale{border-bottom:1px solid var(--line);padding:8px 0}.archive-sale:last-child{border-bottom:0}
+@media(max-width:360px){.app{padding-left:10px;padding-right:10px}.card{padding:11px}.saleitem{grid-template-columns:minmax(0,1fr) 116px}.row{gap:5px}.row input{font-size:15px}.stat{padding:10px}.stat strong{font-size:16px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* Тёмно-зелёная тема исходного варианта + лёгкие микроанимации */
+:root{color-scheme:dark;--bg:#091b13;--panel:#10291d;--panel2:#173627;--text:#eef7f0;--muted:#a5b9aa;--line:#294737;--green:#25834d;--green2:#37a765;--red:#e56d6d;--soft:#193c29;--chicken:#e9bc58;--pork:#f08c9a}
+body{background:var(--bg);color:var(--text)}
+header{background:#0c2218;border-color:var(--line)}
+nav{background:rgba(10,31,21,.94);border-color:var(--line)}
+nav button{color:#9eb4a4}nav button.active{background:#1a402b;color:#8ce0a7}
+.card,.stat,.sale,.archive-button{background:var(--panel);border-color:var(--line);color:var(--text)}
+label{color:#b8cabb}input{background:#0a2016;border-color:#345541;color:var(--text)}input:focus{border-color:var(--green2);box-shadow:0 0 0 3px #37a76526}input::placeholder{color:#789080}
+.secondary{background:#1b3a29;color:#e5f2e8;border-color:#315640!important}.danger,.warning{background:#3a2020;color:#ffb7b7;border-color:#633333}
+.bigtotal{background:#123622;border-color:#28543a}.bigtotal .caption{color:#a8d5b5}.bigtotal strong{color:#8de0a6}
+.stat{background:#10291d}.today-pill{background:#193c29;color:#8ce0a7}
+.stockline{border-color:var(--line)}.sale p b{color:var(--text)}.sale .sale-total{color:#8de0a6}
+.home-action-icon{background:#193c29;color:#8ce0a6}.cash-result{background:#10291d;border-color:var(--line)}
+.archive-button span,.archive-detail{color:var(--muted)}.archive-detail{border-color:var(--line)}.archive-item{border-color:var(--line)}
+.toast{background:#173e29;color:#f1fff4;border:1px solid #32704b;box-shadow:0 10px 30px #0005}
+/* Screen transitions, button feedback and gentle card entrance */
+.page.active{animation:pageSlideIn .24s cubic-bezier(.2,.75,.25,1)}
+@keyframes pageSlideIn{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+.card,.stat,.sale{transition:transform .18s ease,border-color .18s ease,box-shadow .18s ease}
+button.primary,button.secondary,button.danger,button.mini,nav button{transition:transform .14s ease,filter .16s ease,background .18s ease,color .18s ease}
+button:active,nav button:active{transform:scale(.975)}
+button.primary:active{filter:brightness(1.15)}
+.stat.bump strong,.stockline.bump strong{animation:numberPop .35s ease}
+@keyframes numberPop{0%{transform:scale(1);color:inherit}45%{transform:scale(1.06);color:#8de0a6}100%{transform:scale(1);color:inherit}}
+.toast.show{display:block;animation:toastIn .24s cubic-bezier(.2,.8,.2,1)}
+@keyframes toastIn{from{opacity:0;transform:translate(-50%,10px) scale(.97)}to{opacity:1;transform:translate(-50%,0) scale(1)}}
+.success-mark{display:inline-grid;place-items:center;width:19px;height:19px;border-radius:50%;background:#2d8c50;color:#fff;margin-right:7px;font-size:12px;animation:checkPop .28s ease-out}
+@keyframes checkPop{from{transform:scale(.5) rotate(-25deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}
+@media(prefers-reduced-motion:reduce){.page.active,.toast.show,.success-mark,.stat.bump strong,.stockline.bump strong{animation:none!important}}
+
+
+/* Custom dark confirmation dialog */
+.modal-overlay{position:fixed;inset:0;z-index:100;display:none;align-items:center;justify-content:center;padding:22px;background:rgba(1,10,6,.76);backdrop-filter:blur(7px);-webkit-backdrop-filter:blur(7px)}
+.modal-overlay.show{display:flex;animation:modalFade .18s ease-out}
+.confirm-card{width:min(100%,360px);padding:23px 20px 18px;border:1px solid #315a41;border-radius:22px;background:linear-gradient(155deg,#153725 0%,#0d2418 100%);color:#eef7f0;box-shadow:0 24px 80px #0009;animation:modalPop .22s cubic-bezier(.2,.8,.2,1)}
+.confirm-icon{width:52px;height:52px;display:grid;place-items:center;margin:0 auto 14px;border-radius:17px;background:#3b2922;border:1px solid #70483a;color:#ffb39a;font-size:25px}
+.confirm-card h3{margin:0 0 8px;text-align:center;font-size:19px;letter-spacing:-.3px}
+.confirm-card p{margin:0 auto 21px;max-width:290px;text-align:center;color:#b6cabb;font-size:13px;line-height:1.55}
+.confirm-actions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.confirm-actions button{min-height:45px;border-radius:12px;font:inherit;font-size:14px;font-weight:750;cursor:pointer;transition:transform .14s ease,filter .14s ease}
+.confirm-cancel{border:1px solid #345440;background:#1b3a29;color:#e4f2e8}
+.confirm-ok{border:1px solid #2c874c;background:#25834d;color:#fff}
+.confirm-ok.is-danger{background:#a94141;border-color:#c35353}
+.confirm-actions button:active{transform:scale(.97)}
+@keyframes modalFade{from{opacity:0}to{opacity:1}}
+@keyframes modalPop{from{opacity:0;transform:translateY(9px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+@media(prefers-reduced-motion:reduce){.modal-overlay.show,.confirm-card{animation:none!important}}
+
+
+/* Усиленная тёмная тема: глубокий фон и контрастные тёмные карточки */
+:root{color-scheme:dark;--bg:#06120c;--panel:#0b1d13;--panel2:#10291b;--text:#edf6ef;--muted:#9bb0a0;--line:#1d3928;--green:#1d7541;--green2:#2e9b59;--red:#ff7777;--soft:#112f1d;--chicken:#edc568;--pork:#f08b9a}
+html,body{background:#06120c!important;color:#edf6ef!important}
+header{background:#07170e!important;border-color:#1d3928!important}
+nav{background:rgba(5,18,11,.97)!important;border-color:#1d3928!important;box-shadow:0 -8px 24px #0003}
+nav button{color:#91a897!important}nav button.active{background:#143b23!important;color:#8fe3a8!important}
+.card,.stat,.sale,.archive-button{background:#0b1d13!important;border-color:#1d3928!important;color:#edf6ef!important;box-shadow:0 3px 12px #0002}
+input,select,textarea{background:#06170d!important;border-color:#294735!important;color:#edf6ef!important}
+input::placeholder{color:#6f8a77!important}
+.secondary{background:#142c1d!important;color:#e6f3e9!important;border-color:#294735!important}
+button.primary{background:#207746!important;color:#f5fff7!important}
+button.danger,button.mini{background:#351b1d!important;color:#ff9a9a!important;border-color:#633034!important}
+.bigtotal{background:#0d2a19!important;border-color:#1d4a2e!important}
+.bigtotal .caption{color:#9ccaaa!important}.bigtotal strong{color:#8de0a6!important}
+.today-pill,.home-action-icon{background:#12341f!important;color:#8de0a6!important}
+.cash-result{background:#0b2015!important;border-color:#1d3928!important}
+.archive-item{border-color:#1d3928!important}.archive-detail{background:#09190f!important;border-color:#1d3928!important;color:#a8bdad!important}
+.warning{background:#302312!important;color:#ffd58a!important;border-color:#60451c!important}
+.toast{background:#12341f!important;color:#edfff1!important;border-color:#2b6840!important}
+.modal-overlay{background:rgba(0,5,2,.82)!important}
+.confirm-card{background:linear-gradient(155deg,#102b1b 0%,#07180e 100%)!important;border-color:#254a31!important}
+
 </style>
 </head>
 <body>
@@ -150,6 +222,14 @@ button.primary{background:linear-gradient(135deg,#2ca364,#197546);color:white;bo
 <footer>13 банок в ящике · Все суммы в леях</footer>
 </div>
 <div class="toast" id="toast"></div>
+<div class="modal-overlay" id="confirmModal" role="dialog" aria-modal="true" aria-labelledby="confirmTitle" aria-describedby="confirmMessage">
+ <div class="confirm-card">
+  <div class="confirm-icon" id="confirmIcon">!</div>
+  <h3 id="confirmTitle">Подтвердить действие</h3>
+  <p id="confirmMessage">Ты уверен, что хочешь продолжить?</p>
+  <div class="confirm-actions"><button type="button" class="confirm-cancel" id="confirmCancel">Отмена</button><button type="button" class="confirm-ok is-danger" id="confirmOk">Да, продолжить</button></div>
+ </div>
+</div>
 
 <script>
 const BOX_SIZE=13;
@@ -174,7 +254,18 @@ function loadData(){
 }
 let data=loadData();
 function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data))}
-function toast(message){const t=el('toast');t.textContent=message;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function toast(message){const t=el('toast');const success=/добавлены в остаток|продажа записана|отчёт сохранён|отчёт за сегодня обновлён|отчёт скопирован|результат проверки кассы сохранён/i.test(message);t.innerHTML=success?'<span class="success-mark">✓</span>'+message:message;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
+function askConfirm({title='Подтвердить действие',message='Ты уверен, что хочешь продолжить?',okText='Да, продолжить',danger=true,icon='!'}={}){
+ return new Promise(resolve=>{
+  const modal=el('confirmModal'),ok=el('confirmOk'),cancel=el('confirmCancel');
+  el('confirmTitle').textContent=title;el('confirmMessage').textContent=message;el('confirmIcon').textContent=icon;ok.textContent=okText;ok.classList.toggle('is-danger',danger);
+  modal.classList.add('show');document.body.style.overflow='hidden';
+  const finish=value=>{modal.classList.remove('show');document.body.style.overflow='';ok.removeEventListener('click',yes);cancel.removeEventListener('click',no);modal.removeEventListener('click',outside);document.removeEventListener('keydown',escape);resolve(value)};
+  const yes=()=>finish(true),no=()=>finish(false),outside=e=>{if(e.target===modal)no()},escape=e=>{if(e.key==='Escape')no()};
+  ok.addEventListener('click',yes);cancel.addEventListener('click',no);modal.addEventListener('click',outside);document.addEventListener('keydown',escape);
+  cancel.focus();
+ });
+}
 function setPage(page){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
@@ -191,9 +282,8 @@ function renderDashboard(){
  el('dashboardDate').textContent=new Date().toLocaleDateString('ru-RU',{day:'2-digit',month:'short'}).toUpperCase();
  const totalCans=data.stock.chicken+data.stock.pork;
  const fullBoxes=Math.floor(totalCans/BOX_SIZE),looseCans=totalCans%BOX_SIZE;
- el('dashStock').textContent=fullBoxes+' ящиков'+(looseCans?' + '+looseCans+' бан.':'');
- el('dashSales').textContent=money(t.total);el('dashCash').textContent=money(t.cash);el('dashCard').textContent=money(t.card);
- el('homeChickenStock').textContent=stockLabel(data.stock.chicken);el('homePorkStock').textContent=stockLabel(data.stock.pork);
+ const updates={dashStock:fullBoxes+' ящиков'+(looseCans?' + '+looseCans+' бан.':''),dashSales:money(t.total),dashCash:money(t.cash),dashCard:money(t.card),homeChickenStock:stockLabel(data.stock.chicken),homePorkStock:stockLabel(data.stock.pork)};
+ Object.entries(updates).forEach(([id,value])=>{const node=el(id);if(node.textContent!==value){node.textContent=value;const holder=node.closest('.stat,.stockline');if(holder){holder.classList.remove('bump');void holder.offsetWidth;holder.classList.add('bump')}}});
 }
 
 function renderBuy(){
@@ -245,8 +335,8 @@ function renderReport(){
  const history=el('salesHistory');if(!data.sales.length)history.innerHTML='<div class="empty">Продаж пока нет.</div>';else history.innerHTML=data.sales.map(s=>{const d=new Date(s.date),date=isNaN(d)?'':d.toLocaleString('ru-RU',{day:'2-digit',month:'2-digit',year:'numeric',hour:'2-digit',minute:'2-digit'});return '<div class="sale"><div class="salehead"><span>'+escapeHtml(s.client||'Продажа без имени')+'</span><small>'+date+'</small></div><p><span class="product-tag chicken"><i class="product-dot"></i>Курица:</span> '+(Number(s.chicken)||0)+' бан. · '+money((Number(s.chicken)||0)*PRICE.chicken)+'<br><span class="product-tag pork"><i class="product-dot"></i>Свинина:</span> '+(Number(s.pork)||0)+' бан. · '+money((Number(s.pork)||0)*PRICE.pork)+'<br><span class="sale-total">'+money(s.total)+'</span><br>Оплата: <b>'+(s.card?'💳 картой':'💵 наличными')+'</b></p><div class="sale-actions"><button class="mini delete-sale" data-sale-id="'+escapeHtml(s.id)+'">Удалить</button></div></div>'}).join('');
  history.querySelectorAll('.delete-sale').forEach(btn=>btn.addEventListener('click',()=>deleteSale(btn.dataset.saleId)));renderCashCheck();renderReportsHistory();
 }
-function deleteSale(id){
- const sale=data.sales.find(s=>String(s.id)===String(id));if(!sale)return;if(!confirm('Удалить эту продажу без записи об отмене? Товар и суммы будут пересчитаны.'))return;
+async function deleteSale(id){
+ const sale=data.sales.find(s=>String(s.id)===String(id));if(!sale)return;if(!await askConfirm({title:'Удалить продажу?',message:'Товар вернётся на склад, а суммы и отчёты будут пересчитаны.',okText:'Удалить продажу',danger:true,icon:'⌫'}))return;
  data.sales=data.sales.filter(s=>String(s.id)!==String(id));data.stock.chicken+=Number(sale.chicken)||0;data.stock.pork+=Number(sale.pork)||0;data.sold.chicken=Math.max(0,data.sold.chicken-(Number(sale.chicken)||0));data.sold.pork=Math.max(0,data.sold.pork-(Number(sale.pork)||0));
  data.reports=data.reports.map(r=>{const inReport=(r.sales||[]).some(s=>String(s.id)===String(id));if(!inReport)return r;const removed=(r.sales||[]).find(s=>String(s.id)===String(id));const sales=(r.sales||[]).filter(s=>String(s.id)!==String(id));const totals=totalsForSales(sales);const stock={...r.stock,chicken:(Number(r.stock?.chicken)||0)+(Number(removed.chicken)||0),pork:(Number(r.stock?.pork)||0)+(Number(removed.pork)||0)};return {...r,sales,stock,sold:{chicken:totals.chicken,pork:totals.pork},totals,expectedCash:expectedCashFrom(sales,r.expenses,r.fuel),actualCash:r.actualCash===null||r.actualCash===undefined?null:Number(r.actualCash)}});
  data.actualCash=null;data.cashCheckDate=null;saveData();renderBuy();renderSell();renderReport();toast('Продажа удалена');
@@ -255,9 +345,9 @@ function deleteSale(id){
 
 function reportHtml(r){const t=totalsForSales(r.sales||[]),stock=r.stock||{chicken:0,pork:0};let out='<div><b>Продажи всего:</b> '+money(t.total)+'<br><b>Курица:</b> '+t.chicken+' банок · '+money(t.chicken*PRICE.chicken)+'<br><b>Свинина:</b> '+t.pork+' банок · '+money(t.pork*PRICE.pork)+'<br><b>Оплата картой:</b> '+money(t.card)+'<br><b>Наличные от продаж:</b> '+money(t.cash)+'<br><b>Расходы:</b> '+money(r.expenses)+'<br><b>Топливо:</b> '+money(r.fuel)+'<br><b>Ожидается в кассе:</b> '+money(expectedCashFrom(r.sales||[],r.expenses,r.fuel))+'<br><b>Остаток курицы:</b> '+fmt(stock.chicken)+' банок ('+boxesLabel(stock.chicken)+')<br><b>Остаток свинины:</b> '+fmt(stock.pork)+' банок ('+boxesLabel(stock.pork)+')<br><b>Стоимость остатка:</b> '+money(stock.chicken*PRICE.chicken+stock.pork*PRICE.pork);if(r.actualCash!==null&&r.actualCash!==undefined&&Number.isFinite(Number(r.actualCash))){const diff=Number(r.actualCash)-expectedCashFrom(r.sales||[],r.expenses,r.fuel);out+='<br><b>Фактически в кассе:</b> '+money(r.actualCash)+'<br><b>Разница:</b> '+(Math.abs(diff)<0.005?'Касса сошлась':(diff<0?'Недостача: '+money(-diff):'Излишек: '+money(diff)))}out+='</div><h4>Покупки за день</h4>';if(!(r.sales||[]).length)out+='<div class="empty">Продаж нет.</div>';else out+=(r.sales||[]).map(s=>'<div class="archive-sale"><b>'+escapeHtml(s.client||'Покупатель без имени')+'</b> · '+new Date(s.date).toLocaleString('ru-RU')+'<br>Курица: '+(Number(s.chicken)||0)+' бан. · Свинина: '+(Number(s.pork)||0)+' бан.<br>Сумма: '+money(s.total)+' · '+(s.card?'Карта':'Наличные')+'</div>').join('');return out}
 function renderReportsHistory(){const box=el('reportsHistory');if(!data.reports.length){box.innerHTML='<div class="empty">Сохранённых отчётов пока нет.</div>';return}box.innerHTML=[...data.reports].sort((a,b)=>String(b.savedAt).localeCompare(String(a.savedAt))).map(r=>{const dateLabel=r.dateKey?new Date(r.dateKey+'T12:00:00').toLocaleDateString('ru-RU'):'Отчёт';const t=totalsForSales(r.sales||[]);return '<div class="archive-item"><button class="archive-button" type="button" data-report-id="'+escapeHtml(r.id)+'"><strong>'+dateLabel+'</strong><span>Продажи: '+money(t.total)+' · '+(r.sales||[]).length+' покупок</span></button><div class="archive-detail" id="detail-'+escapeHtml(r.id)+'" style="display:none">'+reportHtml(r)+'</div></div>'}).join('');box.querySelectorAll('.archive-button').forEach(btn=>btn.addEventListener('click',()=>{const detail=el('detail-'+btn.dataset.reportId);if(detail)detail.style.display=detail.style.display==='none'?'block':'none'}))}
-el('saveReport').addEventListener('click',()=>{const snapshot=getSnapshot();const existing=data.reports.findIndex(r=>r.dateKey===snapshot.dateKey);if(existing>=0){if(!confirm('Отчёт за сегодня уже сохранён. Обновить его текущими данными?'))return;snapshot.id=data.reports[existing].id;data.reports[existing]=snapshot}else{snapshot.id=makeId();data.reports.unshift(snapshot)}saveData();renderReportsHistory();toast(existing>=0?'Отчёт за сегодня обновлён':'Отчёт сохранён в историю')});
+el('saveReport').addEventListener('click',async()=>{const snapshot=getSnapshot();const existing=data.reports.findIndex(r=>r.dateKey===snapshot.dateKey);if(existing>=0){if(!await askConfirm({title:'Обновить отчёт?',message:'Отчёт за сегодня уже сохранён. Заменить его текущими данными?',okText:'Обновить отчёт',danger:false,icon:'↻'}))return;snapshot.id=data.reports[existing].id;data.reports[existing]=snapshot}else{snapshot.id=makeId();data.reports.unshift(snapshot)}saveData();renderReportsHistory();toast(existing>=0?'Отчёт за сегодня обновлён':'Отчёт сохранён в историю')});
 el('copyReport').addEventListener('click',async()=>{const t=totalsForSales(data.sales),text=`ОТЧЁТ ПО ТУШЁНКЕ\nДата: ${new Date().toLocaleDateString('ru-RU')}\nПродано курицы: ${t.chicken} банок — ${money(t.chicken*PRICE.chicken)}\nПродано свинины: ${t.pork} банок — ${money(t.pork*PRICE.pork)}\nВсего продаж: ${money(t.total)}\nОстаток курицы: ${data.stock.chicken} банок\nОстаток свинины: ${data.stock.pork} банок\nОплата картой: ${money(t.card)}\nНаличные до расходов: ${money(t.cash)}\nРасходы: ${money(data.expenses)}\nТопливо: ${money(data.fuel)}\nОжидается в кассе: ${money(expectedCashFrom(data.sales,data.expenses,data.fuel))}\nФактически наличных: ${data.actualCash===null?'не проверено':money(data.actualCash)}\nПродаж записано: ${data.sales.length}`;try{await navigator.clipboard.writeText(text);toast('Отчёт скопирован')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Отчёт скопирован')}});
-el('resetAll').addEventListener('click',()=>{if(!confirm('Точно сбросить остатки, продажи, расходы и историю отчётов? Это нельзя отменить.'))return;data={stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0,reports:[],actualCash:null,cashCheckDate:null};saveData();renderBuy();renderSell();renderReport();toast('Учёт сброшен')});
+el('resetAll').addEventListener('click',async()=>{if(!await askConfirm({title:'Сбросить весь учёт?',message:'Остатки, продажи, расходы и история отчётов будут удалены. Это действие нельзя отменить.',okText:'Да, сбросить',danger:true,icon:'⚠'}))return;data={stock:{chicken:0,pork:0},sales:[],sold:{chicken:0,pork:0},expenses:0,fuel:0,reports:[],actualCash:null,cashCheckDate:null};saveData();renderBuy();renderSell();renderReport();toast('Учёт сброшен')});
 renderBuy();renderSell();renderReport();
 </script>
 </body>
