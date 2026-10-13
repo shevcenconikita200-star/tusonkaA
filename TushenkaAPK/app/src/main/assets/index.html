@@ -13,7 +13,7 @@ html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--text)
 header{margin:0 -16px 18px;padding:18px 18px 16px;background:#fff;border-bottom:1px solid var(--line)}
 .brand{display:flex;align-items:center;gap:10px}.logo{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;background:var(--soft);font-size:22px}
 h1{font-size:19px;letter-spacing:-.35px;margin:0;font-weight:750}header p{font-size:12px;color:var(--muted);margin:2px 0 0}
-nav{position:fixed;z-index:10;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#ffffffed;border-top:1px solid var(--line);backdrop-filter:blur(12px);max-width:620px;margin:auto}
+nav{position:fixed;z-index:10;bottom:0;left:0;right:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;padding:8px 12px calc(8px + env(safe-area-inset-bottom));background:#ffffffed;border-top:1px solid var(--line);backdrop-filter:blur(12px);max-width:620px;margin:auto}
 nav button{min-width:0;padding:7px 2px 6px;border:0;border-radius:10px;background:transparent;color:#737b73;font-size:11px;font-weight:600;cursor:pointer;transition:background .15s,color .15s}
 nav button.active{background:var(--soft);color:var(--green)}nav button:active,button:active{transform:scale(.99)}
 .page{display:none}.page.active{display:block;animation:pageIn .16s ease-out}@keyframes pageIn{from{opacity:.6}to{opacity:1}}
@@ -109,6 +109,32 @@ button.danger,button.mini{background:#351b1d!important;color:#ff9a9a!important;b
 .modal-overlay{background:rgba(0,5,2,.82)!important}
 .confirm-card{background:linear-gradient(155deg,#102b1b 0%,#07180e 100%)!important;border-color:#254a31!important}
 
+
+/* Раздел клиентов */
+select{width:100%;padding:12px;background:#0a2016;border:1px solid #345541;border-radius:10px;color:var(--text);font:inherit;font-size:16px}
+.client-suggestions{margin-top:6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b2015}
+.client-suggestion{display:block;width:100%;text-align:left;padding:10px 12px;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--text);font:inherit;cursor:pointer}
+.client-suggestion:last-child{border-bottom:0}.client-suggestion strong{display:block;font-size:13px}.client-suggestion span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.client-entry{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:#0b2015}
+.client-entry-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.client-entry-head strong{font-size:14px;overflow-wrap:anywhere}.client-entry p{font-size:12px;line-height:1.6;color:var(--muted);margin:8px 0}.client-entry-actions{display:flex;gap:7px}.client-entry-actions button{flex:1}
+nav button{font-size:10px;padding-left:0;padding-right:0}
+
+
+.district-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.district-card{background:#0b2015;border:1px solid #244a31;border-radius:14px;padding:14px;text-align:left;color:var(--text);min-height:82px;cursor:pointer}
+.district-card strong{display:block;font-size:15px;margin-bottom:7px}.district-card span{font-size:12px;color:var(--muted)}.district-card.active{border-color:#55a96e;background:#10301d}
+.client-entry{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:8px;background:#0b2015}
+.client-entry-head{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}.client-entry-head strong{font-size:14px;overflow-wrap:anywhere}.client-entry p{font-size:12px;line-height:1.6;color:var(--muted);margin:8px 0}
+.client-entry-actions{display:flex;gap:7px;flex-wrap:wrap}.client-entry-actions button{flex:1;min-width:100px}
+.client-suggestions{margin-top:6px;border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#0b2015}
+.client-suggestion{display:block;width:100%;text-align:left;padding:10px 12px;background:transparent;border:0;border-bottom:1px solid var(--line);color:var(--text);font:inherit;cursor:pointer}
+.client-suggestion:last-child{border-bottom:0}.client-suggestion strong{display:block;font-size:13px}.client-suggestion span{display:block;font-size:11px;color:var(--muted);margin-top:3px}
+.debt-preview{margin:10px 0;padding:12px;border-radius:10px;background:#302312;color:#ffd58a}.debt-preview strong{display:block;font-size:20px;margin-top:4px}
+
+
+.action-link{display:inline-flex;align-items:center;justify-content:center;text-decoration:none;text-align:center;flex:1;min-height:42px;padding:10px 12px;border-radius:12px;font-weight:700;font-size:13px}
+.client-entry-actions{display:flex;gap:8px;flex-wrap:wrap}
+@media(max-width:420px){.client-entry-actions .action-link{min-width:130px}}
 </style>
 </head>
 <body>
@@ -118,10 +144,53 @@ button.danger,button.mini{background:#351b1d!important;color:#ff9a9a!important;b
 </header>
 <nav>
   <button data-page="buy"><span>▦</span><br>Закупка</button>
+  <button data-page="clients"><span>♙</span><br>Клиенты</button>
   <button class="active" data-page="home"><span>⌂</span><br>Главная</button>
   <button data-page="sell"><span>＋</span><br>Продажа</button>
   <button data-page="report"><span>▥</span><br>Отчёт</button>
 </nav>
+
+<section id="page-clients" class="page">
+ <div class="dashboard-title"><h2>Клиенты</h2><span class="today-pill" id="clientCount">0 активных</span></div>
+ <button class="primary" id="showAddClient" style="width:100%;margin:0 0 10px">＋ Добавить клиента</button>
+ <div class="card" id="importClientsCard" style="margin-bottom:14px">
+  <div class="cardhead"><h3>Загрузить список доставок</h3><button type="button" class="mini" id="toggleImportClients">Вставить список</button></div>
+  <p class="smallnote">Вставь сюда сообщение целиком — приложение попробует распознать телефоны, районы и количество. Если не указано, какую тушёнку хотят, заказ останется пустым.</p>
+  <div id="importClientsBody" style="display:none">
+   <textarea id="deliveryListText" rows="8" placeholder="Вставь сюда список клиентов из сообщения..."></textarea>
+   <button class="primary" id="previewDeliveryList" style="width:100%;margin-top:8px">Распознать список</button>
+   <div id="deliveryListPreview" style="margin-top:10px"></div>
+   <button class="primary" id="importDeliveryClients" style="width:100%;margin-top:8px;display:none">Добавить клиентов в список</button>
+  </div>
+ </div>
+ <div class="card" id="undeliveredCard" style="margin-bottom:14px">
+  <div class="cardhead"><h3>Не выполненные заказы</h3><span class="price" id="undeliveredCount">0</span></div>
+  <p class="smallnote">Здесь остаются клиенты, которым заказ ещё не завершили. Скопируй список и отправь директору.</p>
+  <div id="undeliveredPreview"><div class="empty">Все заказы выполнены.</div></div>
+  <button class="primary" id="copyUndelivered" style="width:100%;margin-top:8px">Скопировать список для директора</button>
+ </div>
+ <div id="clientDistricts" class="district-grid" style="display:none"></div>
+ <div id="clientFormCard" class="card" style="display:none">
+  <div class="cardhead"><h3 id="clientFormTitle">Добавить клиента</h3><button type="button" class="mini" id="closeClientForm">Закрыть</button></div>
+  <div class="field"><label for="customerPhone">Номер телефона</label><input id="customerPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+373 6X XXX XXX"><div id="clientSuggestions" class="client-suggestions" style="display:none"></div></div>
+  <div class="field"><label for="customerArea">Город, село или район</label>
+   <input id="customerArea" type="text" list="localitySuggestions" autocomplete="off" placeholder="Начни вводить: Ботаника, Чим...">
+   <datalist id="localitySuggestions"></datalist>
+   <div id="localityMatches" class="client-suggestions" style="display:none"></div>
+  </div>
+  <div class="field"><label for="customerAddress">Адрес</label><input id="customerAddress" type="text" autocomplete="street-address" placeholder="Улица, дом, подъезд"></div>
+  <div class="field"><label>Заказ клиента</label>
+   <div class="saleitem"><div><h3 class="product-tag chicken"><i class="product-dot"></i>Куриная</h3><p>85 лей/банка</p></div><div class="row"><div><label for="customerChickenBoxes">Ящиков</label><input id="customerChickenBoxes" type="number" min="0" step="1"></div><div><label for="customerChickenCans">Отдельных банок</label><input id="customerChickenCans" type="number" min="0" step="1"></div></div></div>
+   <div class="saleitem"><div><h3 class="product-tag pork"><i class="product-dot"></i>Свиная</h3><p>95 лей/банка</p></div><div class="row"><div><label for="customerPorkBoxes">Ящиков</label><input id="customerPorkBoxes" type="number" min="0" step="1"></div><div><label for="customerPorkCans">Отдельных банок</label><input id="customerPorkCans" type="number" min="0" step="1"></div></div></div>
+   <p class="smallnote">Всего банок: <b id="customerOrderCans">0</b></p><div class="bigtotal"><div class="caption">Сумма к оплате за заказ</div><strong id="customerOrderTotal">0 лей</strong></div>
+  </div>
+  <button class="primary" id="saveCustomer">Добавить клиента</button>
+  <button class="secondary" id="cancelCustomerEdit" style="display:none;margin-top:8px">Отменить редактирование</button>
+  <p class="smallnote">Номер телефона — уникальный. Если клиент уже есть, выбери его из подсказки, чтобы вернуть в список без повторной записи.</p>
+ </div>
+ <div id="clientDetail" class="card" style="display:none"></div>
+ <div id="clientListCard" class="card" style="display:none"><div class="cardhead"><h3>Клиенты в списке</h3></div><input id="clientSearch" type="search" placeholder="Поиск по телефону, адресу или району"><div id="allClientsList" style="margin-top:12px"></div></div>
+</section>
 
 <section id="page-home" class="page active">
  <div class="dashboard">
@@ -173,7 +242,8 @@ button.danger,button.mini{background:#351b1d!important;color:#ff9a9a!important;b
 <section id="page-sell" class="page">
  <h2>Новая продажа</h2><p class="intro">Укажи количество ящиков и отдельных банок.</p>
  <div class="card">
-  <label for="clientName">Имя клиента (необязательно)</label><input id="clientName" type="text" placeholder="Имя клиента">
+  <label for="clientName">Клиент</label><input id="clientName" type="text" placeholder="Имя или телефон (необязательно)">
+  <div id="saleClientBadge" class="smallnote" style="display:none"></div>
   <label class="checkline"><input id="paidByCard" type="checkbox"> Оплата картой</label>
   <div class="saleitem"><div><h3 class="product-tag chicken"><i class="product-dot"></i>Куриная</h3><p>85 лей/банка · в наличии <b id="sellChickenStock">0</b></p></div>
    <div class="row"><div><label for="sellChickenBoxes">Ящиков</label><input id="sellChickenBoxes" type="number" min="0" placeholder="0"></div><div><label for="sellChickenCans">Банок</label><input id="sellChickenCans" type="number" min="0" placeholder="0"></div></div>
@@ -249,8 +319,8 @@ const makeId=()=>Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,
 function loadData(){
  try{
   const s=JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
-  return {stock:{chicken:Number(s.stock?.chicken)||0,pork:Number(s.stock?.pork)||0},sold:{chicken:Number(s.sold?.chicken)||0,pork:Number(s.sold?.pork)||0},sales:Array.isArray(s.sales)?s.sales.map((x,i)=>({...x,id:x.id||('legacy-'+i+'-'+String(x.date||''))})):[],expenses:Number(s.expenses)||0,fuel:Number(s.fuel)||0,reports:Array.isArray(s.reports)?s.reports:[],actualCash:s.actualCash===null||s.actualCash===undefined?null:Number(s.actualCash),cashCheckDate:s.cashCheckDate||null};
- }catch(e){return {stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0,reports:[],actualCash:null,cashCheckDate:null}}
+  return {stock:{chicken:Number(s.stock?.chicken)||0,pork:Number(s.stock?.pork)||0},sold:{chicken:Number(s.sold?.chicken)||0,pork:Number(s.sold?.pork)||0},sales:Array.isArray(s.sales)?s.sales.map((x,i)=>({...x,id:x.id||('legacy-'+i+'-'+String(x.date||''))})):[],expenses:Number(s.expenses)||0,fuel:Number(s.fuel)||0,reports:Array.isArray(s.reports)?s.reports:[],clients:Array.isArray(s.clients)?s.clients.map(c=>({...c,active:c.active!==false,chickenBoxes:Number(c.chickenBoxes)||0,chickenCans:Number(c.chickenCans)||0,porkBoxes:Number(c.porkBoxes)||0,porkCans:Number(c.porkCans)||0})):[],actualCash:s.actualCash===null||s.actualCash===undefined?null:Number(s.actualCash),cashCheckDate:s.cashCheckDate||null};
+ }catch(e){return {stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0,reports:[],clients:[],actualCash:null,cashCheckDate:null}}
 }
 let data=loadData();
 function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data))}
@@ -269,12 +339,166 @@ function askConfirm({title='Подтвердить действие',message='Т
 function setPage(page){
  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',p.id==='page-'+page));
  document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));
- if(page==='home')renderDashboard();if(page==='buy')renderBuy();if(page==='sell')renderSell();if(page==='report')renderReport();window.scrollTo({top:0,behavior:'smooth'});
+ if(page==='home')renderDashboard();if(page==='buy')renderBuy();if(page==='clients')renderClients();if(page==='sell')renderSell();if(page==='report')renderReport();window.scrollTo({top:0,behavior:'smooth'});
 }
 document.querySelectorAll('nav button').forEach(b=>b.addEventListener('click',()=>setPage(b.dataset.page)));
 el('homeGoSell').addEventListener('click',()=>setPage('sell'));
 el('homeGoBuy').addEventListener('click',()=>setPage('buy'));
 
+
+function normalizePhone(value){return String(value||'').replace(/\D/g,'')}
+let editingClientId=null, selectedClientDistrict=null, selectedSaleClientId=null;
+const localities = ["Центр", "Ботаника", "Буюканы", "Рышкановка", "Чеканы", "Телецентр", "Скулянка", "Старая Почта", "Малая Малина", "Дурлешты", "Кодру", "Сынжера", "Ватра", "Крикова", "Вадул-луй-Водэ", "Ставчены", "Гратиешты", "Гидигич", "Бубуечь", "Бачой", "Брэила", "Браниште", "Бык", "Бэчой", "Колоница", "Кондрица", "Крузешты", "Добружа", "Фаурешты", "Фрумушика", "Гоян", "Гоянул Ноу", "Хулбоака", "Иванча", "Магдачешты", "Мерены", "Микауць", "Пашкань", "Пересечина", "Петрикань", "Порумбень", "Пухой", "Ратуc", "Ревака", "Сынтэуца", "Тогатин", "Тохатин", "Трушень", "Ульму", "Вэрзэрешть", "Виишоара", "Яловены", "Стрэшены", "Калараш", "Оргеев", "Криулень", "Анений Ной", "Хынчешты", "Чимишлия", "Комрат", "Кагул", "Унгены", "Бельцы", "Сороки", "Орхей", "Единцы", "Фалешты", "Флорешты", "Дрокия", "Рышканы", "Глодяны", "Бричаны", "Окница", "Дондюшаны", "Сынжерей", "Теленешты", "Резина", "Шолданешты", "Дубоссары", "Каменка", "Рыбница", "Тирасполь", "Бендеры", "Каушаны", "Штефан-Водэ", "Чадыр-Лунга", "Вулканешты", "Тараклия", "Басарабяска", "Ниспорены", "Леова", "Кантемир", "Липканы", "Купчинь", "Корнешты", "Бырладены", "Кэушень", "Сипотень", "Сэрэтений Векь", "Бэлцата", "Бэлэбэнешть", "Болдурешты", "Бошкана", "Брынзень", "Будай", "Буздугань", "Бутучень", "Кэприана", "Кошница", "Дэнчень", "Дэрэнешть", "Долна", "Дрэсличень", "Думбрава", "Егоровка", "Фетешты", "Фундул Галбеней", "Гура Быкулуй", "Хородиште", "Избиште", "Лозова", "Малаешты", "Мэлэешть", "Мэгдэчешть", "Милештий Мичь", "Милештий Марь", "Молешты", "Негрешты", "Нискань", "Новые Анены", "Оницкань", "Пеления", "Пепень", "Плопь", "Похребень", "Попештий де Жос", "Попештий де Сус", "Пухачень", "Путунтей", "Рошканы", "Садова", "Сахарна", "Селиште", "Слобозия-Душка", "Суручень", "Талмаза", "Татарешты", "Устия", "Валя Пержей", "Варница", "Василевка", "Вискэуць", "Зымбрень", "Чореску"];
+// Районы Кишинёва и населённые пункты муниципия, включая пригороды.
+localities.push(...["Рышкановка","Рышкановка","Ботаника","Буюканы","Чеканы","Центр","Телецентр","Старая Почта","Скулянка","Малая Малина","Почта Веке","Рашкановка","Рэскэновка","Бачой","Бубуечь","Будешты","Будешть","Бык","Браила","Брэила","Кондрица","Крикова","Крузешты","Колоница","Кодру","Дурлешты","Гидигич","Гратиешты","Сынжера","Ставчены","Тогатин","Тохатин","Трушены","Вадул-луй-Водэ","Ватра","Чореску","Петриканы","Реча","Рэскэновка","Ciocana","Centru","Botanica","Buiucani","Rîșcani","Poșta Veche","Poșta-veche","Telecentru","Sculeanca","Rascani","Rascanovca","Rășcanovca","Grătiești","Ghidhighici","Ghidighici","Bubuieci","Budești","Băcioi","Cricova","Cruzești","Colonița","Codru","Durlești","Sîngera","Stăuceni","Tohatin","Trușeni","Vadul lui Vodă","Vatra","Ciorescu"]);
+const districts = ['Центр','Ботаника','Буюканы','Рышкановка','Чеканы','Телецентр','Скулянка','Старая Почта','Малая Малина','Другое'];
+function normalizePlace(value){return String(value||'').toLocaleLowerCase('ru').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[ăâ]/g,'a').replace(/[î]/g,'i').replace(/[ș]/g,'s').replace(/[ț]/g,'t').replace(/[^a-zа-яё0-9]/gi,'')}
+function initLocalitySuggestions(){
+ const dl=el('localitySuggestions');dl.innerHTML=localities.map(x=>'<option value="'+escapeHtml(x)+'"></option>').join('');
+}
+function renderLocalityMatches(){
+ const input=el('customerArea'),box=el('localityMatches'),q=normalizePlace(input.value);
+ if(q.length<2){box.style.display='none';box.innerHTML='';return}
+ const matches=localities.filter(x=>normalizePlace(x).includes(q)).slice(0,10);
+ if(!matches.length){box.style.display='none';box.innerHTML='';return}
+ box.innerHTML=matches.map(x=>'<button type="button" class="client-suggestion" data-locality="'+escapeHtml(x)+'"><strong>'+escapeHtml(x)+'</strong></button>').join('');
+ box.style.display='block';
+ box.querySelectorAll('[data-locality]').forEach(b=>b.addEventListener('click',()=>{input.value=b.dataset.locality;box.style.display='none'}));
+}
+function openClientForm(){el('clientFormCard').style.display='block';el('clientDetail').style.display='none';resetClientForm();window.scrollTo({top:0,behavior:'smooth'});el('customerPhone').focus()}
+function closeClientForm(){el('clientFormCard').style.display='none';resetClientForm()}
+function renderClientSuggestions(){
+ const q=normalizePhone(el('customerPhone').value),box=el('clientSuggestions');
+ if(q.length<3){box.style.display='none';box.innerHTML='';return}
+ const matches=data.clients.filter(c=>normalizePhone(c.phone).includes(q)).slice(0,6);
+ if(!matches.length){box.style.display='none';box.innerHTML='';return}
+ box.innerHTML=matches.map(c=>'<button type="button" class="client-suggestion" data-client-id="'+escapeHtml(c.id)+'"><strong>'+escapeHtml(c.phone)+(c.active===false?' · ранее обслужен':'')+'</strong><span>'+escapeHtml(c.area||'')+' · '+escapeHtml(c.address||'')+'</span></button>').join('');box.style.display='block';
+ box.querySelectorAll('[data-client-id]').forEach(btn=>btn.addEventListener('click',()=>selectClientForForm(btn.dataset.clientId)));
+}
+function clientOrder(c){return {chickenBoxes:Math.max(0,Math.floor(Number(c.chickenBoxes)||0)),chickenCans:Math.max(0,Math.floor(Number(c.chickenCans)||0)),porkBoxes:Math.max(0,Math.floor(Number(c.porkBoxes)||0)),porkCans:Math.max(0,Math.floor(Number(c.porkCans)||0))}}
+function orderQty(c,kind){const o=clientOrder(c);return o[kind+'Boxes']*BOX_SIZE+o[kind+'Cans']}
+function orderTotal(c){return orderQty(c,'chicken')*PRICE.chicken+orderQty(c,'pork')*PRICE.pork}
+function orderDescription(c){const cb=clientOrder(c);if(!cb.chickenBoxes&&!cb.chickenCans&&!cb.porkBoxes&&!cb.porkCans)return 'Не указан';return 'Курица: '+cb.chickenBoxes+' ящ. + '+cb.chickenCans+' бан. ('+orderQty(c,'chicken')+' бан.) · Свинина: '+cb.porkBoxes+' ящ. + '+cb.porkCans+' бан. ('+orderQty(c,'pork')+' бан.)'}
+function updateCustomerOrderPreview(){const c=num('customerChickenBoxes')*BOX_SIZE+num('customerChickenCans'),p=num('customerPorkBoxes')*BOX_SIZE+num('customerPorkCans');el('customerOrderCans').textContent=fmt(c+p);el('customerOrderTotal').textContent=money(c*PRICE.chicken+p*PRICE.pork)}
+function selectClientForForm(id){const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;editingClientId=c.id;el('customerPhone').value=c.phone||'';el('customerArea').value=c.area||'';el('customerAddress').value=c.address||'';const o=clientOrder(c);el('customerChickenBoxes').value=o.chickenBoxes||'';el('customerChickenCans').value=o.chickenCans||'';el('customerPorkBoxes').value=o.porkBoxes||'';el('customerPorkCans').value=o.porkCans||'';updateCustomerOrderPreview();el('clientFormTitle').textContent='Изменить клиента';el('saveCustomer').textContent='Сохранить и добавить в список';el('cancelCustomerEdit').style.display='block';el('clientSuggestions').style.display='none'}
+function resetClientForm(){editingClientId=null;el('customerPhone').value='';el('customerArea').value='';el('customerAddress').value='';['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Добавить клиента';el('saveCustomer').textContent='Добавить клиента';el('cancelCustomerEdit').style.display='none';el('clientSuggestions').style.display='none'}
+function undeliveredClientLine(c){
+ const note=String(c.importNote||'').trim();
+ const order=note||orderDescription(c);
+ return (c.phone||'Без телефона')+' — '+(c.area||'Район не указан')+' — '+order;
+}
+function undeliveredReportText(){
+ const active=data.clients.filter(c=>c.active!==false);
+ if(!active.length)return 'Не выполненные заказы\n\nВсе заказы выполнены.';
+ return 'Не выполненные заказы\n\n'+active.map(undeliveredClientLine).join('\n')+'\n\nВсего клиентов: '+active.length;
+}
+function renderUndelivered(){
+ const active=data.clients.filter(c=>c.active!==false);
+ el('undeliveredCount').textContent=String(active.length)+' клиентов';
+ el('undeliveredPreview').innerHTML=active.length?active.map(c=>'<div class="stockline"><span>'+escapeHtml(c.phone||'Без телефона')+' · '+escapeHtml(c.area||'Район не указан')+'</span><strong>'+escapeHtml(c.importNote||orderDescription(c))+'</strong></div>').join(''):'<div class="empty">Все заказы выполнены.</div>';
+ el('copyUndelivered').disabled=!active.length;
+}
+function renderClients(){
+ const active=data.clients.filter(c=>c.active!==false);el('clientCount').textContent=active.length+' активных';
+ renderUndelivered();
+ const districtsBox=el('clientDistricts'),listCard=el('clientListCard');
+ listCard.style.display=active.length?'block':'none';
+ const areas=[...new Set(active.map(c=>(c.area||'Другое').trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b,'ru'));
+ districtsBox.style.display=areas.length?'grid':'none';
+ districtsBox.innerHTML=areas.map(d=>{const n=active.filter(c=>(c.area||'Другое')===d).length;return '<button type="button" class="district-card '+(selectedClientDistrict===d?'active':'')+'" data-district="'+escapeHtml(d)+'"><strong>'+escapeHtml(d)+'</strong><span>'+n+' '+(n===1?'клиент':n>=2&&n<=4?'клиента':'клиентов')+'</span></button>'}).join('');
+ districtsBox.querySelectorAll('[data-district]').forEach(btn=>btn.addEventListener('click',()=>{selectedClientDistrict=selectedClientDistrict===btn.dataset.district?null:btn.dataset.district;renderClients()}));
+ const q=el('clientSearch').value.trim().toLowerCase(),digits=normalizePhone(q);
+ const visible=active.filter(c=>(!selectedClientDistrict||(c.area||'Другое')===selectedClientDistrict)&&(!q||String(c.phone||'').toLowerCase().includes(q)||normalizePhone(c.phone).includes(digits)||String(c.address||'').toLowerCase().includes(q)||String(c.area||'').toLowerCase().includes(q)||orderDescription(c).toLowerCase().includes(q)));
+ const box=el('allClientsList');
+ if(!visible.length)box.innerHTML='<div class="empty">'+(selectedClientDistrict?'В районе «'+escapeHtml(selectedClientDistrict)+'» пока нет активных клиентов.':'Нет активных клиентов. Нажми «Добавить клиента».')+'</div>';
+ else box.innerHTML=(selectedClientDistrict?'<div class="cardhead"><h3>'+escapeHtml(selectedClientDistrict)+'</h3><button type="button" class="mini" id="clearDistrict">Все районы</button></div>':'')+visible.map(c=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Другое')+'</span></div><p><b>Адрес:</b> '+escapeHtml(c.address||'Не указан')+'<br><b>Заказ:</b> '+escapeHtml(orderDescription(c))+'<br><b>Сумма:</b> '+money(orderTotal(c))+'</p><div class="client-entry-actions"><button type="button" class="primary" data-open-client="'+escapeHtml(c.id)+'">Открыть клиента</button></div></div>').join('');
+ const clear=el('clearDistrict');if(clear)clear.addEventListener('click',()=>{selectedClientDistrict=null;renderClients()});box.querySelectorAll('[data-open-client]').forEach(btn=>btn.addEventListener('click',()=>showClientDetail(btn.dataset.openClient)));
+ const archived=data.clients.filter(c=>c.active===false&&(!q||String(c.phone||'').toLowerCase().includes(q)||normalizePhone(c.phone).includes(normalizePhone(q))||String(c.address||'').toLowerCase().includes(q)||String(c.area||'').toLowerCase().includes(q)));
+ if(q&&archived.length){box.innerHTML+='<div class="smallnote" style="margin:14px 0 8px">Ранее обслуженные клиенты (сохранены в памяти)</div>'+archived.map(c=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Другое')+'</span></div><p>'+escapeHtml(c.address||'')+'<br>Последний заказ: '+escapeHtml(orderDescription(c))+'</p><div class="client-entry-actions"><button type="button" class="secondary" data-reactivate-client="'+escapeHtml(c.id)+'">Вернуть в список</button></div></div>').join('')}
+ box.querySelectorAll('[data-reactivate-client]').forEach(btn=>btn.addEventListener('click',()=>{const c=data.clients.find(x=>String(x.id)===String(btn.dataset.reactivateClient));if(!c)return;c.active=true;saveData();selectedClientDistrict=c.area||'Другое';renderClients();toast('Клиент возвращён в список')}));
+}
+function showClientDetail(id){
+ const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;const box=el('clientDetail');box.style.display='block';
+ const o=clientOrder(c),ch=orderQty(c,'chicken'),po=orderQty(c,'pork'),total=orderTotal(c);
+ box.innerHTML='<div class="cardhead"><h3>Карточка клиента</h3><button type="button" class="mini" id="closeClientDetail">Закрыть</button></div><h3>'+escapeHtml(c.phone)+'</h3><p class="smallnote">'+escapeHtml(c.area||'Адрес не указан')+' · '+escapeHtml(c.address||'')+'</p><div class="client-entry-actions" style="margin:10px 0"><a class="primary action-link" href="tel:'+escapeHtml(normalizePhone(c.phone))+'">Позвонить клиенту</a><a class="secondary action-link" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query='+encodeURIComponent((c.address||c.area||'').trim())+'">Поехать на адрес</a></div><div class="stockline"><span>Курица</span><strong>'+o.chickenBoxes+' ящ. + '+o.chickenCans+' бан. = '+ch+' бан.</strong></div><div class="stockline"><span>Свинина</span><strong>'+o.porkBoxes+' ящ. + '+o.porkCans+' бан. = '+po+' бан.</strong></div><div class="bigtotal"><div class="caption">Сумма к оплате за заказ</div><strong>'+money(total)+'</strong></div><label class="checkline"><input id="clientPaidByCard" type="checkbox"> Оплата картой</label><button class="primary" id="clientFinishOrder" style="width:100%;margin-top:10px">Завершить заказ</button><button class="secondary" id="clientEditBtn" style="width:100%;margin-top:8px">Изменить данные / заказ</button>';
+ el('closeClientDetail').addEventListener('click',()=>box.style.display='none');
+ el('clientFinishOrder').addEventListener('click',()=>{
+  const chicken=orderQty(c,'chicken'),pork=orderQty(c,'pork'),sum=chicken*PRICE.chicken+pork*PRICE.pork;
+  if(chicken+pork===0){toast('Сначала укажи количество тушёнки в заказе');return}
+  if(chicken>data.stock.chicken||pork>data.stock.pork){toast('Не хватает товара на складе: проверь остатки');return}
+  const sale={id:makeId(),date:new Date().toISOString(),client:c.phone,clientId:c.id,chicken,pork,total:sum,card:el('clientPaidByCard').checked,onCredit:false,owed:0};
+  data.stock.chicken-=chicken;data.stock.pork-=pork;data.sold.chicken+=chicken;data.sold.pork+=pork;data.sales.unshift(sale);data.actualCash=null;data.cashCheckDate=null;c.lastOrder=orderDescription(c);c.lastSaleAt=sale.date;c.active=false;
+  saveData();box.style.display='none';renderClients();renderDashboard();renderBuy();renderSell();renderReport();toast('Заказ завершён, клиент убран из активного списка');
+ });
+ el('clientEditBtn').addEventListener('click',()=>{openClientForm();selectClientForForm(c.id)});
+}
+let parsedDeliveryClients=[];
+function parseDeliveryLine(raw){
+ const line=String(raw||'').trim();if(!line)return null;
+ const phoneMatch=line.match(/^\s*(?:\+?\d{1,3}\s*)?(?:\(\d{2,3}\)\s*)?\d{5,8}\b/);if(!phoneMatch)return null;
+ const phone=phoneMatch[0].trim(), digits=normalizePhone(phone);if(digits.length<7)return null;
+ const normalized=normalizePlace(line);
+ const qtyMatch=line.match(/\b(\d+)\s*(?:cutii?|cutie|cutii|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\.?|шт\.?)/i);
+ const qty=qtyMatch?Math.max(0,parseInt(qtyMatch[1],10)||0):null;
+ const productText=normalized;
+ let kind='';if(/porc|svin|свин/.test(productText))kind='pork';else if(/pasare|pui|gaina|chicken|куриц/.test(productText))kind='chicken';
+ // Prefer known locality aliases, longest first, so the place can appear before or after the quantity.
+ const aliases=[
+  ['Rascanovca','Рышкановка'],['Rascani','Рышкановка'],['Rîșcani','Рышкановка'],['Rîscani','Рышкановка'],['Rascan','Рышкановка'],['Rășcanovca','Рышкановка'],
+  ['Poștă veche','Старая Почта'],['Poșta veche','Старая Почта'],['Poșta Veche','Старая Почта'],['Posta veche','Старая Почта'],
+  ['Gratiesti','Гратиешты'],['Grătiești','Гратиешты'],['Ghidhighici','Гидигич'],['Ghidighici','Гидигич'],['Buiucani','Буюканы'],['Botanica','Ботаника'],['Centru','Центр'],['Ciocana','Чеканы'],['Bubuieci','Бубуечь'],['Budești','Будешты'],['Budesti','Будешты'],['Băcioi','Бачой'],['Bacioi','Бачой'],['Cricova','Крикова'],['Cruzești','Крузешты'],['Colonița','Колоница'],['Codru','Кодру'],['Durlești','Дурлешты'],['Sîngera','Сынжера'],['Singera','Сынжера'],['Stăuceni','Ставчены'],['Stauceni','Ставчены'],['Tohatin','Тохатин'],['Trușeni','Трушень'],['Truseni','Трушень'],['Vatra','Ватра'],['Telecentru','Телецентр'],['Sculeanca','Скулянка']
+ ];
+ let area='';for(const [alias,canonical] of aliases.sort((a,b)=>b[0].length-a[0].length)){if(normalized.includes(normalizePlace(alias))){area=canonical;break}}
+ if(!area){
+  const before=line.slice(phoneMatch.index+phoneMatch[0].length,qtyMatch?qtyMatch.index:line.length).replace(/[.,:;\-]+/g,' ').trim();
+  const after=qtyMatch?line.slice(qtyMatch.index+qtyMatch[0].length).replace(/\b(porc|pasare|pui|mixt|mixte|mixed)\b/ig,'').replace(/[.,:;\-]+/g,' ').trim():'';
+  area=(before||after).replace(/\b(porc|pasare|pui|mixt|mixte|mixed)\b/ig,'').trim();
+ }
+ if(!area)area='';
+ const client={phone,area,address:'',chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
+ // Only fill product quantities when the list explicitly says which product they want.
+ if(qty!==null&&kind==='chicken')client.chickenBoxes=qty;
+ if(qty!==null&&kind==='pork')client.porkBoxes=qty;
+ client.importNote=(qty===null?'':qty+' '+(qty===1?'ящик':'ящика'))+(kind?' · '+(kind==='chicken'?'куриная':'свиная'):'');client.deliveryOriginal=line;
+ return client;
+}
+function previewDeliveryList(){
+ const lines=el('deliveryListText').value.split(/\r?\n/).map(x=>x.trim()).filter(Boolean);
+ parsedDeliveryClients=lines.map(parseDeliveryLine).filter(Boolean);
+ const box=el('deliveryListPreview'),btn=el('importDeliveryClients');
+ if(!parsedDeliveryClients.length){box.innerHTML='<p class="smallnote">Не получилось распознать клиентов. Проверь, что в строках есть номера телефонов.</p>';btn.style.display='none';return}
+ box.innerHTML='<p class="smallnote">Найдено клиентов: <b>'+parsedDeliveryClients.length+'</b>. Проверь список перед добавлением:</p>'+parsedDeliveryClients.map((c,i)=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Район не распознан')+'</span></div><p><b>Заказ:</b> '+escapeHtml(orderDescription(c))+(c.importNote&&!c.chickenBoxes&&!c.porkBoxes?' · '+escapeHtml(c.importNote):'')+'</p></div>').join('');
+ btn.style.display='block';
+}
+function importDeliveryList(){
+ let added=0,updated=0,skipped=0;const now=new Date().toISOString();
+ for(const item of parsedDeliveryClients){
+  let existing=data.clients.find(c=>normalizePhone(c.phone)===normalizePhone(item.phone));
+  if(existing){Object.assign(existing,{phone:item.phone,area:item.area||existing.area||'',address:existing.address||'',active:true,updatedAt:now,importNote:item.importNote||'',deliveryOriginal:item.deliveryOriginal||item.phone});
+   if(item.chickenBoxes||item.porkBoxes||item.chickenCans||item.porkCans)Object.assign(existing,{chickenBoxes:item.chickenBoxes,chickenCans:item.chickenCans,porkBoxes:item.porkBoxes,porkCans:item.porkCans});
+   updated++;
+  }else{data.clients.unshift({id:makeId(),...item,createdAt:now,updatedAt:now});added++}
+ }
+ saveData();selectedClientDistrict=null;el('deliveryListText').value='';el('deliveryListPreview').innerHTML='';el('importDeliveryClients').style.display='none';el('importClientsBody').style.display='none';el('toggleImportClients').textContent='Вставить список';parsedDeliveryClients=[];renderClients();toast('Список обработан: добавлено '+added+', обновлено '+updated+' клиентов');
+}
+el('toggleImportClients').addEventListener('click',()=>{const body=el('importClientsBody'),open=body.style.display==='none';body.style.display=open?'block':'none';el('toggleImportClients').textContent=open?'Скрыть':'Вставить список'});
+el('copyUndelivered').addEventListener('click',async()=>{const text=undeliveredReportText();try{await navigator.clipboard.writeText(text);toast('Список невыполненных заказов скопирован')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();toast(ok?'Список невыполненных заказов скопирован':'Не удалось скопировать список')}});
+el('previewDeliveryList').addEventListener('click',previewDeliveryList);el('importDeliveryClients').addEventListener('click',importDeliveryList);
+
+initLocalitySuggestions();el('customerArea').addEventListener('input',renderLocalityMatches);el('customerArea').addEventListener('change',()=>{el('localityMatches').style.display='none'});el('showAddClient').addEventListener('click',openClientForm);el('closeClientForm').addEventListener('click',closeClientForm);el('customerPhone').addEventListener('input',renderClientSuggestions);el('clientSearch').addEventListener('input',renderClients);el('cancelCustomerEdit').addEventListener('click',resetClientForm);
+['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).addEventListener('input',updateCustomerOrderPreview));
+el('saveCustomer').addEventListener('click',()=>{
+ const phone=el('customerPhone').value.trim(),phoneDigits=normalizePhone(phone),address=el('customerAddress').value.trim(),area=el('customerArea').value.trim();
+ if(phoneDigits.length<7){toast('Введи корректный номер телефона');el('customerPhone').focus();return}
+ if(!area.trim()){toast('Выбери или введи город, село или район');el('customerArea').focus();return}
+ const order={chickenBoxes:num('customerChickenBoxes'),chickenCans:num('customerChickenCans'),porkBoxes:num('customerPorkBoxes'),porkCans:num('customerPorkCans')};
+ let client=data.clients.find(c=>normalizePhone(c.phone)===phoneDigits);
+ if(client&&String(client.id)!==String(editingClientId)){selectClientForForm(client.id);toast('Этот номер уже сохранён — открыл его заказ');return}
+ const now=new Date().toISOString();
+ if(editingClientId){client=data.clients.find(c=>String(c.id)===String(editingClientId));if(client)Object.assign(client,{phone,area,address,...order,active:true,updatedAt:now})}
+ else{client={id:makeId(),phone,area,address,...order,active:true,createdAt:now};data.clients.unshift(client)}
+ saveData();closeClientForm();selectedClientDistrict=area;renderClients();toast('Клиент добавлен в список');
+});
 function renderDashboard(){
  const today=todayKey();
  const todays=data.sales.filter(s=>{const d=new Date(s.date);return !isNaN(d)&&d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0')===today});
@@ -306,10 +530,12 @@ function renderSell(){
 
 el('finishSale').addEventListener('click',()=>{
  const c=saleQty('Chicken'),p=saleQty('Pork');if(c+p===0){toast('Введи количество банок');return}if(c>data.stock.chicken||p>data.stock.pork){renderSell();toast('Проверь остаток');return}
- const sale={id:makeId(),date:new Date().toISOString(),client:el('clientName').value.trim(),chicken:c,pork:p,total:c*PRICE.chicken+p*PRICE.pork,card:el('paidByCard').checked};
+ const client=data.clients.find(x=>String(x.id)===String(selectedSaleClientId)),total=c*PRICE.chicken+p*PRICE.pork;
+ const sale={id:makeId(),date:new Date().toISOString(),client:client?client.phone:el('clientName').value.trim(),clientId:client?client.id:null,chicken:c,pork:p,total,card:el('paidByCard').checked,onCredit:false,owed:0};
  data.stock.chicken-=c;data.stock.pork-=p;data.sold.chicken+=c;data.sold.pork+=p;data.sales.unshift(sale);data.actualCash=null;data.cashCheckDate=null;
- saveData();['sellChickenBoxes','sellChickenCans','sellPorkBoxes','sellPorkCans'].forEach(id=>el(id).value='');el('clientName').value='';el('paidByCard').checked=false;
- renderSell();renderBuy();renderReport();setPage('home');toast('Продажа записана');
+ if(client){client.lastOrder=orderDescription(client);client.lastSaleAt=sale.date;client.active=false}
+ saveData();['sellChickenBoxes','sellChickenCans','sellPorkBoxes','sellPorkCans'].forEach(id=>el(id).value='');el('clientName').value='';el('clientName').readOnly=false;el('saleClientBadge').style.display='none';el('paidByCard').checked=false;selectedSaleClientId=null;
+ renderSell();renderBuy();renderReport();renderClients();setPage('home');toast(client?'Продажа записана, клиент убран из активного списка':'Продажа записана');
 });
 
 function boxesLabel(n){return Math.floor(n/BOX_SIZE)+' ящ. · '+(n%BOX_SIZE)+' бан.'}
@@ -347,8 +573,8 @@ function reportHtml(r){const t=totalsForSales(r.sales||[]),stock=r.stock||{chick
 function renderReportsHistory(){const box=el('reportsHistory');if(!data.reports.length){box.innerHTML='<div class="empty">Сохранённых отчётов пока нет.</div>';return}box.innerHTML=[...data.reports].sort((a,b)=>String(b.savedAt).localeCompare(String(a.savedAt))).map(r=>{const dateLabel=r.dateKey?new Date(r.dateKey+'T12:00:00').toLocaleDateString('ru-RU'):'Отчёт';const t=totalsForSales(r.sales||[]);return '<div class="archive-item"><button class="archive-button" type="button" data-report-id="'+escapeHtml(r.id)+'"><strong>'+dateLabel+'</strong><span>Продажи: '+money(t.total)+' · '+(r.sales||[]).length+' покупок</span></button><div class="archive-detail" id="detail-'+escapeHtml(r.id)+'" style="display:none">'+reportHtml(r)+'</div></div>'}).join('');box.querySelectorAll('.archive-button').forEach(btn=>btn.addEventListener('click',()=>{const detail=el('detail-'+btn.dataset.reportId);if(detail)detail.style.display=detail.style.display==='none'?'block':'none'}))}
 el('saveReport').addEventListener('click',async()=>{const snapshot=getSnapshot();const existing=data.reports.findIndex(r=>r.dateKey===snapshot.dateKey);if(existing>=0){if(!await askConfirm({title:'Обновить отчёт?',message:'Отчёт за сегодня уже сохранён. Заменить его текущими данными?',okText:'Обновить отчёт',danger:false,icon:'↻'}))return;snapshot.id=data.reports[existing].id;data.reports[existing]=snapshot}else{snapshot.id=makeId();data.reports.unshift(snapshot)}saveData();renderReportsHistory();toast(existing>=0?'Отчёт за сегодня обновлён':'Отчёт сохранён в историю')});
 el('copyReport').addEventListener('click',async()=>{const t=totalsForSales(data.sales),text=`ОТЧЁТ ПО ТУШЁНКЕ\nДата: ${new Date().toLocaleDateString('ru-RU')}\nПродано курицы: ${t.chicken} банок — ${money(t.chicken*PRICE.chicken)}\nПродано свинины: ${t.pork} банок — ${money(t.pork*PRICE.pork)}\nВсего продаж: ${money(t.total)}\nОстаток курицы: ${data.stock.chicken} банок\nОстаток свинины: ${data.stock.pork} банок\nОплата картой: ${money(t.card)}\nНаличные до расходов: ${money(t.cash)}\nРасходы: ${money(data.expenses)}\nТопливо: ${money(data.fuel)}\nОжидается в кассе: ${money(expectedCashFrom(data.sales,data.expenses,data.fuel))}\nФактически наличных: ${data.actualCash===null?'не проверено':money(data.actualCash)}\nПродаж записано: ${data.sales.length}`;try{await navigator.clipboard.writeText(text);toast('Отчёт скопирован')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();document.execCommand('copy');ta.remove();toast('Отчёт скопирован')}});
-el('resetAll').addEventListener('click',async()=>{if(!await askConfirm({title:'Сбросить весь учёт?',message:'Остатки, продажи, расходы и история отчётов будут удалены. Это действие нельзя отменить.',okText:'Да, сбросить',danger:true,icon:'⚠'}))return;data={stock:{chicken:0,pork:0},sales:[],sold:{chicken:0,pork:0},expenses:0,fuel:0,reports:[],actualCash:null,cashCheckDate:null};saveData();renderBuy();renderSell();renderReport();toast('Учёт сброшен')});
-renderBuy();renderSell();renderReport();
+el('resetAll').addEventListener('click',async()=>{if(!await askConfirm({title:'Сбросить весь учёт?',message:'Остатки, продажи, расходы и история отчётов будут удалены. Все активные клиенты тоже уберутся из текущего списка, но сохранятся в памяти как ранее обслуженные. Это действие нельзя отменить.',okText:'Да, сбросить',danger:true,icon:'⚠'}))return;const savedClients=Array.isArray(data.clients)?data.clients.map(c=>({...c,active:false,archivedAt:new Date().toISOString()})):[];data={stock:{chicken:0,pork:0},sales:[],sold:{chicken:0,pork:0},expenses:0,fuel:0,reports:[],clients:savedClients,actualCash:null,cashCheckDate:null};saveData();renderClients();renderBuy();renderSell();renderReport();toast('Учёт сброшен, клиенты сохранены в памяти')});
+renderBuy();renderSell();renderReport();renderClients();
 </script>
 </body>
 </html>
