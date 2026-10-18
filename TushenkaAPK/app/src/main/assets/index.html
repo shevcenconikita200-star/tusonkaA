@@ -155,7 +155,7 @@ nav button{font-size:10px;padding-left:0;padding-right:0}
  <button class="primary" id="showAddClient" style="width:100%;margin:0 0 10px">＋ Добавить клиента</button>
  <div class="card" id="importClientsCard" style="margin-bottom:14px">
   <div class="cardhead"><h3>Загрузить список доставок</h3><button type="button" class="mini" id="toggleImportClients">Вставить список</button></div>
-  <p class="smallnote">Вставь сюда сообщение целиком — приложение попробует распознать телефоны, районы и количество. Если не указано, какую тушёнку хотят, заказ останется пустым.</p>
+  <p class="smallnote">Вставь список целиком от любого из трёх шефов. Сайт распознаёт строки с телефонами даже если номер стоит не в начале, пытается определить населённый пункт, количество и вид мяса. Исходная румынская строка сохраняется без перевода.</p>
   <div id="importClientsBody" style="display:none">
    <textarea id="deliveryListText" rows="8" placeholder="Вставь сюда список клиентов из сообщения..."></textarea>
    <button class="primary" id="previewDeliveryList" style="width:100%;margin-top:8px">Распознать список</button>
@@ -349,12 +349,1403 @@ el('homeGoBuy').addEventListener('click',()=>setPage('buy'));
 function normalizePhone(value){return String(value||'').replace(/\D/g,'')}
 let editingClientId=null, selectedClientDistrict=null, selectedSaleClientId=null;
 const localities = ["Центр", "Ботаника", "Буюканы", "Рышкановка", "Чеканы", "Телецентр", "Скулянка", "Старая Почта", "Малая Малина", "Дурлешты", "Кодру", "Сынжера", "Ватра", "Крикова", "Вадул-луй-Водэ", "Ставчены", "Гратиешты", "Гидигич", "Бубуечь", "Бачой", "Брэила", "Браниште", "Бык", "Бэчой", "Колоница", "Кондрица", "Крузешты", "Добружа", "Фаурешты", "Фрумушика", "Гоян", "Гоянул Ноу", "Хулбоака", "Иванча", "Магдачешты", "Мерены", "Микауць", "Пашкань", "Пересечина", "Петрикань", "Порумбень", "Пухой", "Ратуc", "Ревака", "Сынтэуца", "Тогатин", "Тохатин", "Трушень", "Ульму", "Вэрзэрешть", "Виишоара", "Яловены", "Стрэшены", "Калараш", "Оргеев", "Криулень", "Анений Ной", "Хынчешты", "Чимишлия", "Комрат", "Кагул", "Унгены", "Бельцы", "Сороки", "Орхей", "Единцы", "Фалешты", "Флорешты", "Дрокия", "Рышканы", "Глодяны", "Бричаны", "Окница", "Дондюшаны", "Сынжерей", "Теленешты", "Резина", "Шолданешты", "Дубоссары", "Каменка", "Рыбница", "Тирасполь", "Бендеры", "Каушаны", "Штефан-Водэ", "Чадыр-Лунга", "Вулканешты", "Тараклия", "Басарабяска", "Ниспорены", "Леова", "Кантемир", "Липканы", "Купчинь", "Корнешты", "Бырладены", "Кэушень", "Сипотень", "Сэрэтений Векь", "Бэлцата", "Бэлэбэнешть", "Болдурешты", "Бошкана", "Брынзень", "Будай", "Буздугань", "Бутучень", "Кэприана", "Кошница", "Дэнчень", "Дэрэнешть", "Долна", "Дрэсличень", "Думбрава", "Егоровка", "Фетешты", "Фундул Галбеней", "Гура Быкулуй", "Хородиште", "Избиште", "Лозова", "Малаешты", "Мэлэешть", "Мэгдэчешть", "Милештий Мичь", "Милештий Марь", "Молешты", "Негрешты", "Нискань", "Новые Анены", "Оницкань", "Пеления", "Пепень", "Плопь", "Похребень", "Попештий де Жос", "Попештий де Сус", "Пухачень", "Путунтей", "Рошканы", "Садова", "Сахарна", "Селиште", "Слобозия-Душка", "Суручень", "Талмаза", "Татарешты", "Устия", "Валя Пержей", "Варница", "Василевка", "Вискэуць", "Зымбрень", "Чореску"];
-// Районы Кишинёва и населённые пункты муниципия, включая пригороды.
+// Районы Кишинёва и населённые пункты муниципия, включая пригороды и варианты написания.
 localities.push(...["Рышкановка","Рышкановка","Ботаника","Буюканы","Чеканы","Центр","Телецентр","Старая Почта","Скулянка","Малая Малина","Почта Веке","Рашкановка","Рэскэновка","Бачой","Бубуечь","Будешты","Будешть","Бык","Браила","Брэила","Кондрица","Крикова","Крузешты","Колоница","Кодру","Дурлешты","Гидигич","Гратиешты","Сынжера","Ставчены","Тогатин","Тохатин","Трушены","Вадул-луй-Водэ","Ватра","Чореску","Петриканы","Реча","Рэскэновка","Ciocana","Centru","Botanica","Buiucani","Rîșcani","Poșta Veche","Poșta-veche","Telecentru","Sculeanca","Rascani","Rascanovca","Rășcanovca","Grătiești","Ghidhighici","Ghidighici","Bubuieci","Budești","Băcioi","Cricova","Cruzești","Colonița","Codru","Durlești","Sîngera","Stăuceni","Tohatin","Trușeni","Vadul lui Vodă","Vatra","Ciorescu"]);
+
+// Дополнительные населённые пункты и варианты написания на румынском/русском.
+localities.push(...[
+'Anenii Noi','Bălți','Balti','Basarabeasca','Bender','Briceni','Cahul','Călărași','Calarasi','Cantemir','Căușeni','Causeni','Chișinău','Chisinau','Cimișlia','Cimislia','Criuleni','Dondușeni','Donduseni','Drochia','Dubăsari','Dubasari','Edineț','Edinet','Fălești','Falesti','Florești','Floresti','Glodeni','Hîncești','Hincesti','Ialoveni','Leova','Nisporeni','Ocnița','Ocnita','Orhei','Rezina','Rîșcani','Riscani','Sîngerei','Singerei','Șoldănești','Soldanesti','Soroca','Ștefan Vodă','Stefan Voda','Strășeni','Straseni','Taraclia','Telenești','Telenesti','Ungheni','Comrat','Ceadîr-Lunga','Ceadir-Lunga','Vulcănești','Vulcanesti','Tiraspol','Rîbnița','Ribnita','Camenca','Grigoriopol','Slobozia','Dnestrovsc','Tighina',
+'Alexăndreni','Alexandreni','Băhrinești','Bahrinesti','Bălăbănești','Balabanesti','Bardar','Bănești','Banesti','Bălășești','Balasesti','Bălți Noi','Bălțișoara'
+]);
+// Населённые пункты из списка, присланного пользователем.
+localities.push(...['Кишинэу', 'Сектор Ботаника', 'Сынджера', 'Доброджя', 'Ревака', 'Бэчой', 'Брэила', 'Фрумушика', 'Стрэйстень', 'Сектор Буюкань', 'Дурлешть', 'Ватра', 'Кондрица', 'Гидигич', 'Трушень', 'Думбрава', 'Сектор Чентру', 'Кодру', 'Сектор Чокана', 'Вадул луй Водэ', 'Вэдулень', 'Бубуечь', 'Бык', 'Хумулешть', 'Будешть', 'Колоница', 'Крузешть', 'Чероборта', 'Тохатин', 'Бунець', 'Келтуиторь', 'Сектор Рышкань', 'Крикова', 'Чореску', 'Фэурешть', 'Гоян', 'Грэтиешть', 'Хулбоака', 'Стэучень', 'Гоянул Ноу', 'Бэлць', 'Елизавета', 'Садовое', 'Бендер', 'Протягайловка', 'Анений Ной', 'Албиница', 'Берёзки', 'Хырбовэцул Ноу', 'Русень', 'Соколень', 'Ботнэрешть', 'Салчия', 'Булбоака', 'Калфа', 'Калфа Ноуэ', 'Кетросу', 'Тодирешть', 'Кирка', 'Ботнэрештий Ной', 'Чобановка', 'Балмаз', 'Мирное', 'Троица Ноуэ', 'Кобуска Ноуэ', 'Кобуска Веке', 'Флорешть', 'Делакэу', 'Флорень', 'Джямэна', 'Батык', 'Гура Быкулуй', 'Хырбовэц', 'Максимовка', 'Мерень', 'Мерений Ной', 'Окюл Рош', 'Пикус', 'Пухэчень', 'Рошкань', 'Спея', 'Шерпень', 'Телица', 'Телица Ноуэ', 'Цынцэрень', 'Крецоая', 'Варница', 'Золотиевка', 'Ларга', 'Николаевка', 'Басарабяска', 'Абаклия', 'Башкалия', 'Карабетовка', 'Иордановка', 'Исерлия', 'Богдановка', 'Карабибер', 'Ивановка', 'Садаклия', 'Бричень', 'Липкань', 'Баласинешть', 'Белявинць', 'Бэлкэуць', 'Бочкэуць', 'Берлинць', 'Каракушений Ной', 'Богдэнешть', 'Безеда', 'Гримешть', 'Каракушений Векь', 'Коликэуць', 'Трестиень', 'Коржеуць', 'Котяла', 'Котюжень', 'Крива', 'Дрепкэуць', 'Гримэнкэуць', 'Халахора де Сус', 'Кириловка', 'Халахора де Жос', 'Хлина', 'Павловка', 'Мэркэуць', 'Мэркэуций Ной', 'Медвежа', 'Слобозия-Медвежа', 'Михэйлень', 'Грозница', 'Перерита', 'Слобозия-Ширэуць', 'Ширэуць', 'Табань', 'Тецкань', 'Требисэуць', 'Кахул', 'Котихана', 'Александерфелд', 'Александру Иоан Куза', 'Андрушул де Жос', 'Андрушул де Сус', 'Бадикул Молдовенеск', 'Баурчи-Молдовень', 'Борчаг', 'Брынза', 'Букурия', 'Бурлаку', 'Спикоаса', 'Бурлэчень', 'Гречень', 'Кёселия Маре', 'Кышлица-Прут', 'Колибаш', 'Крихана Веке', 'Кукоара', 'Киркань', 'Дойна', 'Ясная Поляна', 'Румянцев', 'Гэвэноаса', 'Владимировка', 'Джюрджюлешть', 'Хулубоая', 'Южное', 'Ларга Ноуэ', 'Ларга Веке', 'Лебеденко', 'Хутулу', 'Урсоая', 'Лопэцика', 'Лучешть', 'Манта', 'Пашкань', 'Московей', 'Трифештий Ной', 'Пелиней', 'Сэтук', 'Рошу', 'Слобозия Маре', 'Тараклия де Салчие', 'Тартаул де Салчие', 'Тудорешть', 'Тэтэрешть', 'Вадул луй Исак', 'Вэлень', 'Зырнешть', 'Пайку', 'Третешть', 'Кантемир']);
+
+// Дополнение: все следующие населённые пункты из списков пользователя.
+const suppliedLocalityText = `
+Кантемир
+Антонешть
+Лека
+Баймаклия
+Акуй
+Сухат
+Кания
+Епурень
+Капаклия
+Кёселия
+Цэрэнкуца
+Чобалакчия
+Флокоаса
+Викторовка
+Кыету
+Димитрова
+Кырпешть
+Кышла
+Шофрановка
+Кочулия
+Коштангалия
+Еникёй
+Бобочика
+Флоричика
+Цолика
+Готешть
+Константинешть
+Харагыш
+Лэргуца
+Лингура
+Крэчун
+Поповка
+Плешень
+Хэнэсень
+Тэтэрэшень
+Плопь
+Александровка
+Хыртоп
+Тараклия
+Порумбешть
+Садык
+Стояновка
+Шамалия
+Тартаул
+Точень
+Вылчеле
+Циганка
+Гёлтосу
+Циганка Ноуэ
+Вишнёвка
+Кэлэрашь
+Орикова
+Бахмут
+Бахмут, н.п.ж-д.ст.
+Бравича
+Буда
+Урсарь
+Кэбэешть
+Деренеу
+Буларда
+Дума
+Фрумоаса
+Хирова
+Хыржаука
+Леордоая
+Мындра
+Паланка
+Ходжинешть
+Хородиште
+Мелешень
+Нишкань
+Онишкань
+Хырбовэц
+Сверида
+Пэулешть
+Петичень
+Питушка
+Пыржолтень
+Рэчула
+Паркань
+Рэдень
+Садова
+Сэсень
+Баху
+Сипотень
+Подул Лунг
+Темелеуць
+Тузара
+Новачь
+Селиштя Ноуэ
+Цибирика
+Скиноаса
+Вэлчинец
+Вэрзэрештий Ной
+Кэушень
+Кэинарь
+Кэинарь, н.п.ж.-д.ст.
+Бакчалия
+Триколич
+Флорика
+Плоп
+Суркичень
+Киркэешть
+Киркэештий Ной
+Баурчи
+Кицкань
+Меренешть
+Захорна
+Чуфлешть
+Кырнэцень
+Кырнэцений Ной
+Сэлкуца Ноуэ
+Копанка
+Кошкалия
+Кременчуг
+Фырлэдень
+Фырлэдений Ной
+Гыска
+Грэдиница
+Леунтя
+Валя Верде
+Григорьевка
+Хаджимус
+Опачь
+Первомайск
+Константиновка
+Плоп-Штюбей
+Сэиць
+Сэлкуца
+Тэнэтарь
+Тэнэтарий Ной
+Штефэнешть
+Урсоая Ноуэ
+Токуз
+Украинка
+Звёздочка
+Заим
+Мариянка де Сус
+Заим, н.п.ж.-д.ст.
+Чимишлия
+Богдановка Ноуэ
+Богдановка Веке
+Димитровка
+Албина
+Фетица
+Мерень
+Батыр
+Ченак
+Чукур-Минджир
+Кодрень
+Злоць, н.п.ж.-д.ст.
+Екатериновка
+Градиште
+Юрьевка
+Гура Галбеней
+Ялпуг
+Присака
+Ялпужень
+Мариенфелд
+Ивановка Ноуэ
+Жавгур
+Артимоновка
+Максимень
+Липовень
+Мунтень
+Скиношика
+Михайловка
+Порумбрей
+Сагайдакул Ноу
+Сагайдак
+Сатул Ноу
+Селемет
+Сурик
+Топала
+Троицкое
+Валя Пержей
+Криулень
+Охринча
+Золончень
+Бэлэбэнешть
+Мэлэешть
+Мэлэештий Ной
+Бэлцата
+Бэлцата де Сус
+Сагайдакул де Сус
+Бошкана
+Мэрдэреука
+Чимишень
+Коржова
+Кошерница
+Круглик
+Долинное
+Валя Колоницей
+Валя Сатулуй
+Дрэсличень
+Логэнешть
+Ратуш
+Дубэсарий Векь
+Хыртопул Маре
+Хыртопул Мик
+Хрушова
+Кетроаса
+Чоплень
+Ишновэц
+Избиште
+Жеврень
+Машкэуць
+Мэгдэчешть
+Миклешть
+Стецкань
+Оницкань
+Порумбень
+Рэкулешть
+Бэлэшешть
+Рышкова
+Слобозия-Душка
+Зэикана
+Дондушень
+Арионешть
+Барабой
+Чернолеука
+Климэуць
+Корбу
+Кришкэуць
+Елизаветовка
+Боросень
+Фрасин
+Карайман
+Кодрений Ной
+Мошана
+Октябрьское
+Пивничень
+Покровка
+Редиул Маре
+Скэень
+Сударка
+Брайкэу
+Телешеука
+Телешеука Ноуэ
+Тырнова
+Бричева
+Еленовка
+Цаул
+Дрокия
+Антонеука
+Баронча
+Баронча Ноуэ
+Кетросу
+Котова
+Мэкэреука
+Доминтень
+Грибова
+Фынтыница
+Гиздита, н.п.ж.-д.ст.
+Хэснэшений Марь
+Хэснэшений Ной
+Лазо
+Марамоновка
+Мичурин
+Мындык
+Моара де Пятрэ
+Никорень
+Окюл Алб
+Холошница Ноуэ
+Шалвирий Ной
+Пелиния
+Пелиния, н.п.ж.-д.ст.
+Первомайское
+Сергеука
+Петрень
+Попештий Ной
+Попештий де Жос
+Попештий де Сус
+София
+Шалвирий Векь
+Чапаевка
+Ильичёвка
+Шурь
+Шурий Ной
+Цариград
+Згурица
+Дубэсарь
+Кочиерь
+Васильевка
+Махала
+Кошница
+Похребя
+Дороцкая
+Холеркань
+Маркэуць
+Моловата
+Моловата Ноуэ
+Роги
+Оксентя
+Пырыта
+Устия
+Единец
+Алексэндрень
+Гординештий Ной
+Купчинь
+Кетрошика Веке
+Кюрт
+Алексеевка
+Бэдраджий Ной
+Бэдраджий Векь
+Блештень
+Володень
+Брэтушень
+Брэтушений Ной
+Брынзень
+Бурлэнешть
+Буздуджень
+Чепелеуць
+Рынгач
+Ванчикэуць
+Кетрошика Ноуэ
+Якимень
+Корпач
+Куконештий Ной
+Куконештий Векь
+Фетешть
+Гашпар
+Голень
+Гординешть
+Ханкэуць
+Хинкэуць
+Клишкэуць
+Пояна
+Хлиная
+Лопатник
+Паркова
+Фынтына Албэ
+Ротунда
+Хлиная Микэ
+Русень
+Слободка
+Столничень
+Шофрынкань
+Теребна
+Тринка
+Виишоара
+Зэбричень
+Онешть
+Фэлешть
+Фабрика де Захэр
+Албинецул Векь
+Албинецул Ноу
+Редиул де Жос
+Редиул де Сус
+Бокань
+Катранык
+Кэлинешть
+Кэлугэр
+Сочий Ной
+Сочий Векь
+Кетриш
+Кетришул Ноу
+Чолаку Ноу
+Чолаку Векь
+Фэгэдэу
+Шолтоая
+Егоровка
+Катранык, н.п.ж.-д.ст.
+Чулук
+Фэлештий Ной
+Петросул Ноу
+Глинжень
+Хилиуць
+Рэуцелул Ноу
+Хынчешть
+Хорешть
+Лукэчень
+Унтень
+Иленуца
+Ишкэлэу
+Бургеля
+Долту
+Извоаре
+Логофтень
+Молдовянка
+Мэрэндень
+Мустяца
+Натальевка
+Белеуць
+Комаровка
+Ивановка
+Поповка
+Цапок
+Нэвырнец
+Обрежа Веке
+Обрежа Ноуэ
+Петросу
+Мэгура
+Мэгура Ноуэ
+Пынзэрень
+Пынзэрений Ной
+Пырлица
+Помпа
+Первомайск
+Суворовка
+Прутень
+Кузмений Векь
+Дружинень
+Валя Русулуй
+Рэуцел
+Рисипень
+Бокша
+Сэрата Веке
+Хитрешть
+Сэрата Ноуэ
+Скумпия
+Мэгурянка
+Николаевка
+Таксобень
+Хрубна Ноуэ
+Врэнешть
+Флорешть
+Гиндешть
+Мэркулешть
+Алексеевка
+Кириловка
+Думитрень
+Рэдулений Ной
+Бэхринешть
+Кашунка
+Черница
+Чирипкэу
+Чутулешть
+Ион Водэ
+Мэринешть
+Сырбешть
+Кошерница
+Кухурештий де Жос
+Ципордей
+Кухурештий де Сус
+Ункитешть
+Ункитешть, н.п.ж.-д.ст.
+Кунича
+Домулджень
+Фрумушика Ноуэ
+Цыра
+Цыра, н.п.ж.-д.ст.
+Гура Каменчий
+Бобулешть
+Гвоздова
+Гура Кэинарулуй
+Зарожень
+Ильичёвка
+Майское
+Безень
+Скэень
+Жапка
+Бурсук
+Лунга
+Нападова
+Валя Рэдоаей
+Пражила
+Антоновка
+Фрунзешть
+Михайловка
+Продэнешть
+Кэпрешть
+Путинешть
+Рэдулений Векь
+Рошиетичь
+Ченуша
+Рошиетичий Векь
+Сэнэтэука
+Севирова
+Штефэнешть
+Продэнештий Векь
+Тыргул Вертюжень
+Трифэнешть
+Александровка
+Вэрвэреука
+Стырчень
+Вэскэуць
+Вертюжень
+Зэлучень
+Глодень
+Стырча
+Балатина
+Клокочений Векь
+Липовэц
+Томештий Ной
+Томештий Векь
+Кажба
+Каменка
+Брынзень
+Бутешть
+Молешть
+Чучуля
+Кобань
+Кухнешть
+Бисерикань
+Кот
+Мовилень
+Сергиень
+Дану
+Каменкуца
+Душмань
+Фундурий Ной
+Фундурий Векь
+Хыждиень
+Яблоана
+Сорока
+Лимбений Ной
+Лимбений Векь
+Петруня
+Стурзовка
+Моара Домняскэ
+Бэлчана
+Бобейка
+Дахнович
+Дрэгушень
+Богичень
+Бозиень
+Дубовка
+Бужор
+Буцень
+Каракуй
+Кэлмэцуй
+Кэрпинень
+Хоржешть
+Кэцелень
+Чоара
+Чучулень
+Котул Морий
+Сэрэтень
+Красноармейское
+Тэлэешть
+Данку
+Дрэгушений Ной
+Хородка
+Фундул Галбеней
+Костешть
+Лэпушна
+Анинь
+Руска
+Леушень
+Фетяска
+Логэнешть
+Мерешень
+Сэрата-Мерешень
+Минджир
+Семёновка
+Мирешть
+Кетрошень
+Негря
+Немцень
+Обилень
+Онешть
+Стрымбень
+Перень
+Погэнешть
+Маркет
+Сэрата-Галбенэ
+Брэтияновка
+Кэрпинянка
+Королёвка
+Валя Флорий
+Секэрень
+Корнешть
+Секэрений Ной
+Шипотень
+Войнеску
+Яловень
+Бардар
+Кэрбуна
+Чигырлень
+Гангура
+Хомутяновка
+Мисовка
+Дэнчень
+Ханска
+Малкоч
+Милештий Мичь
+Пятра Албэ
+Ниморень
+Пожэрень
+Пухой
+Рэзень
+Милештий Ной
+Русештий Ной
+Русештий Векь
+Сочитень
+Суручень
+Ципала
+Бэлцаць
+Будэй
+Улму
+Вэратик
+Вэсиень
+Зымбрень
+Гэурень
+Леова
+Яргара
+Мешень
+Бэюш
+Кочулия Ноуэ
+Бештемак
+Питешть
+Борогань
+Казанджик
+Селиште
+Чадыр
+Князевка
+Кызлар
+Колибабовка
+Ковурлуй
+Купкуй
+Филипень
+Хэнэсений Ной
+Орак
+Романовка
+Булгэрика
+Сэрата-Резэшь
+Сэрэтень
+Виктория
+Сэрэцика Ноуэ
+Кымпул Дрепт
+Сырма
+Тигеч
+Купорань
+Токиле-Рэдукань
+Томай
+Томаюл Ноу
+Сэрэцика Веке
+Вознесень
+Троян
+Троица
+Ниспорень
+Бэлэнешть
+Гэурень
+Бэлэурешть
+Бэрбоень
+Болдурешть
+Бэкшень
+Килишоая
+Болцун
+Брэтулень
+Кырнешть
+Кэлимэнешть
+Чорешть
+Вулкэнешть
+Чутешть
+Валя Нырновей
+Кристешть
+Грозешть
+Юрчень
+Мырзоая
+Маринич
+Хелештень
+Милешть
+Пэручень
+Солтэнешть
+Шишкань
+Дрождиень
+Одая
+Валя-Трестиень
+Исэйкань
+Луминица
+Одобешть
+Селиштень
+Вэрзэрешть
+Шендрень
+Вынэторь
+Збероая
+Окница
+Фрунзэ
+Отачь
+Бырлэдень
+Паладя
+Ружница
+Бырнова
+Каларашовка
+Березовка
+Клокушна
+Корестэуць
+Стэлинешть
+Дынджень
+Гринэуць
+Гырбова
+Гринэуць-Молдова
+Гринэуць-Рая
+Хэдэрэуць
+Ленкэуць
+Вережень
+Липник
+Паустова
+Мерешеука
+Михэлэшень
+Наславча
+Майовка
+Саука
+Унгурь
+Орхей
+Березлоджь
+Хыждиень
+Биешть
+Чихорень
+Слобозия-Ходороджя
+Болохан
+Брэвичень
+Булэешть
+Киперчень
+Андреевка
+Воротец
+Чокылтень
+Клишова Ноуэ
+Федореука
+Клишова
+Крихана
+Кукурузений де Сус
+Сирота
+Кукурузень
+Окница-Рэзешь
+Донич
+Каменча
+Покшешть
+Гетлова
+Норочень
+Исакова
+Иванча
+Брэнешть
+Фурчень
+Жора де Мижлок
+Жора де Жос
+Жора де Сус
+Лопатна
+Тырзиень
+Миток
+Мырзешть
+Мырзачь
+Морозень
+Брянова
+Некулэеука
+Пеливан
+Чишмя
+Пересечина
+Пятра
+Желобок
+Подгорень
+Похорничень
+Похребень
+Шеркань
+Пуцинтей
+Дишкова
+Выпрова
+Сэмэнанка
+Лукэшеука
+Мана
+Степ-Сочь
+Суслень
+Телешеу
+Требужень
+Бутучень
+Моровая
+Ватич
+Курки
+Табэра
+Вышкэуць
+Захорень
+Зориле
+Инкулец
+Окница-Цэрань
+Резина
+Бошерница
+Чорна
+Стохная
+Бушэука
+Чинишеуць
+Когылничень
+Куйзэука
+Екимэуць
+Гидулень
+Рошканий де Жос
+Рошканий де Сус
+Игнэцей
+Лалова
+Нистрень
+Ципова
+Липчень
+Матеуць
+Минчений де Жос
+Минчений де Сус
+Отак
+Пэпэуць
+Печиште
+Припичень-Рэзешь
+Припичень-Курки
+Сахарна Ноуэ
+Бучушка
+Сахарна
+Сыркова
+Пискэрешть
+Солончень
+Тарасова
+Трифешть
+Цареука
+Цахнэуць
+Рышкань
+Баланул Ноу
+Рэмэзан
+Дэмэшкань
+Дуруитоаря
+Пэскэуць
+Проскурень
+Алексэндрешть
+Кукуеций Ной
+Кукуеций Векь
+Ивэнешть
+Алуниш
+Боросений Ной
+Браниште
+Аврэмень
+Ретень
+Ретень-Василеуць
+Корлэтень
+Дуруитоаря Ноуэ
+Думень
+Гэлэшень
+Малиновское
+Лупэрия
+Михэйлень
+Нихорень
+Петрушень
+Пыржота
+Почумбэуць
+Почумбень
+Друца
+Рэкэрия
+Ушурей
+Реча
+Слобозия-Реча
+Свердиак
+Сингурень
+Стурзень
+Шаптебань
+Шумна
+Булхак
+Чепэрия
+Василеуць
+Арманка
+Чубара
+Михэйлений Ной
+Мошень
+Штюбеень
+Зэикань
+Сынджерей
+Бируинца
+Алексэндрень
+Григорешть
+Хечул Векь
+Циплешть
+Циплетешть
+Бэлэшешть
+Словянка
+Биличений Ной
+Липованка
+Мындрештий Ной
+Биличений Векь
+Коада Язулуй
+Бурсучень
+Слобозия-Мэгура
+Кишкэрень
+Слобозия-Кишкэрень
+Чучуень
+Брежень
+Копэчень
+Антоновка
+Евгеньевка
+Гавриловка
+Петровка
+Владимиреука
+Кошкодень
+Боблетичь
+Флэмынзень
+Котюжений Мичь
+Алексеука
+Гура Ойтуз
+Куболта
+Мэрэшешть
+Доброджя Веке
+Котовка
+Доброджя Ноуэ
+Дрэгэнешть
+Кирилень
+Сакаровка
+Думбрэвица
+Боканчя-Скит
+Валя луй Влад
+Григорэука
+Козешть
+Петропавловка
+Хечул Ноу
+Езэрений Векь
+Езэрений Ной
+Валя Норокулуй
+Пепень
+Пепений Ной
+Рэзэлэй
+Романовка
+Препелица
+Клишкэуць
+Михайловка
+Шестачь
+Рэдоая
+Тэура Веке
+Тэура Ноуэ
+Сынджереий Ной
+Мэринешть
+Цамбула
+Пэлэрия
+Сорока
+Бэдичень
+Григорэука
+Бэксань
+Булбочь
+Булбочий Ной
+Кэинарий Векь
+Флоричень
+Косэуць
+Йоржница
+Ливезь
+Собарь
+Валя
+Дэркэуць
+Дэркэуций Ной
+Мэлкэуць
+Дубна
+Егорень
+Холошница
+Курешница
+Христич
+Ярова
+Балинць
+Балинций Ной
+Нимереука
+Черлина
+Окланда
+Околина
+Цепилова
+Волоаве
+Пырлица
+Ванцина
+Ванцина Микэ
+Раковэц
+Редь-Черешновэц
+Реджина Мария
+Луговое
+Рубленица
+Рубленица Ноуэ
+Рудь
+Скинень
+Скинений Ной
+Стойкань
+Солонец
+Шептелич
+Шолкань
+Курешница Ноуэ
+Тэтэрэука Веке
+Дечебал
+Нёркань
+Слобозия Ноуэ
+Тэтэрэука Ноуэ
+Толокэнешть
+Трифэуць
+Василкэу
+Инундень
+Руслановка
+Вэдень
+Думбрэвень
+Вэрэнкэу
+Слобозия-Кремене
+Слобозия-Вэрэнкэу
+Висока
+Воловица
+Александру чел Бун
+Застынка
+Стрэшень
+Фэгурень
+Буковэц
+Рассвет
+Кэприяна
+Кириянка
+Кодрянка
+Лупа-Реча
+Кожушна
+Долна
+Гэлешть
+Гэлештий Ной
+Гелэуза
+Сака
+Греблешть
+Мэртинешть
+Лозова
+Стежэрень
+Микэуць
+Горное
+Миклеушень
+Хузун
+Негрешть
+Пэнэшешть
+Чобанка
+Замчоджь
+Реча
+Ромэнешть
+Рошкань
+Скорень
+Сирець
+Тэтэрешть
+Цигэнешть
+Войнова
+Ворничень
+Зубрешть
+Шолдэнешть
+Алчедар
+Курэтура
+Одая
+Кипешка
+Климэуций де Жос
+Кобыля
+Котюжений Марь
+Кобыля, н.п.ж.-д.ст.
+Кушелэука
+Кушмирка
+Добруша
+Речешть
+Фузэука
+Гэузень
+Глинжень
+Михулень
+Олишкань
+Похоарна
+Рэспопень
+Рогожень
+Рогожень, н.п.ж.-д. ст.
+Салчия
+Лелина
+Сэмэшкань
+Шипка
+Вадул-Рашков
+Сокола
+Штефан Водэ
+Алава
+Лазо
+Антонешть
+Брезоая
+Карахасань
+Кэплань
+Чобурчиу
+Копчак
+Крокмаз
+Ермоклия
+Фештелица
+Марианка де Жос
+Олэнешть
+Паланка
+Попяска
+Пуркарь
+Рэскэець
+Рэскэеций Ной
+Слобозия
+Талмаза
+Тудора
+Волинтирь
+Твардица
+Албота де Жос
+Хаджикёй
+Албота де Сус
+Рошица
+Софиевка
+Алуату
+Балабану
+Дерменджи
+Кайраклия
+Чалык
+Кортенул Ноу
+Самурза
+Кортен
+Мусаиту
+Новосёловка
+Ореховка
+Виноградовка
+Чумай
+Теленешть
+Михэлаша
+Михэлаша Ноуэ
+Бэнешть
+Бэнештий Ной
+Богзешть
+Брынзений Ной
+Брынзений Векь
+Кэзэнешть
+Вадул-Лека
+Вадул-Лека Ноу
+Киштелница
+Кицканий Векь
+Кицканий Ной
+Чулукань
+Кодрул Ноу
+Коропчень
+Крэснэшень
+Гиличень
+Кучоая
+Кучоая Ноуэ
+Хиришень
+Инешть
+Леушень
+Мындрешть
+Негурень
+Керсак
+Нукэрень
+Ордэшей
+Пиструень
+Пиструений Ной
+Ратуш
+Сэрэтений Ной
+Зэиканий Ной
+Сэрэтений Векь
+Захареука
+Скорцень
+Сухулучень
+Гермэнешть
+Тыршицей
+Флутура
+Цынцэрень
+Вэсиень
+Згэрдешть
+Бондареука
+Чофу
+Унгень
+Агрономовка
+Негурений Ной
+Зэзулений Ной
+Лидовка
+Сэгиень
+Богений Ной
+Богений Векь
+Изворень
+Мирчешть
+Бучумень
+Бучумень, н.п.ж.-д.ст.
+Бумбэта
+Бушила
+Четирень
+Чоропкань
+Кондрэтешть
+Куртоая
+Корнова
+Костулень
+Флорицоая Веке
+Флорицоая Ноуэ
+Грозаска
+Хырчешть
+Дружба
+Мынзэтешть
+Веверица
+Мэкэрешть
+Фрэсинешть
+Мэгуреле
+Мэноилешть
+Новая Николаевка
+Вулпешть
+Морений Ной
+Шиковэц
+Нэпэдень
+Негурений Векь
+Кошень
+Цыгира
+Зэзулений Векь
+Петрешть
+Меделень
+Петрешть, н.п.ж.-д.ст.
+Христофоровка
+Рэдений Векь
+Скулень
+Блиндешть
+Флорень
+Герман
+Синешть
+Пожарна
+Тешкурень
+Грэсень
+Унцешть
+Валя Маре
+Буздуганий де Жос
+Буздуганий де Сус
+Морений Векь
+Загаранча
+Семень
+Комрат
+Чадыр-Лунга
+Вулкэнешть
+Вулкэнешть, н.п.ж.-д.ст.
+Авдарма
+Баурчи
+Бешалма
+Бешгёз
+Буджяк
+Карбалия
+Казаклия
+Кёселия Русэ
+Кириет-Лунга
+Кирсова
+Чок-Майдан
+Чишмикёй
+Конгаз
+Конгазчикул де Сус
+Конгазчикул де Жос
+Дудулешть
+Котовское
+Дезгинджя
+Етулия
+Етулия, н.п.ж.-д.ст.
+Етулия Ноуэ
+Ферапонтьевка
+Гайдар
+Жолтай
+Светлый
+Тирасполь
+Каменка
+Солнечное
+Красное
+Днестровск
+Дубэсарь
+Григориополь
+Маяк
+Рыбница
+Слобозия
+Тирасполул Ноу
+Андреевка
+Пыкалова
+Шмалена
+Белочь
+Бычок
+Нововладимировка
+Ближний Хутор
+Броштень
+Бутор
+Индия
+Карагаш
+Катериновка
+Котовка
+Федосеевка
+Мочаровка
+Карманова
+Садки
+Кобасна
+Кобасна, н.п.ж.-д.ст.
+Сухая Рыбница
+Колосова
+Красная Бессарабия
+Победа
+Комисаровка Ноуэ
+Боска
+Кошница Ноуэ
+Похребя Ноуэ
+Коротна
+Красненькое
+Красный Октябрь
+Красный Виноградарь
+Афанасьевка
+Александровка Ноуэ
+Калиновка
+Лунга Ноуэ
+Красногорка
+Кузмин
+Войтовка
+Красная Горка
+Дойбань I
+Койкова
+Дойбань II
+Дубэу
+Дзержинское
+Фрунзэ
+Андрияшевка Ноуэ
+Андрияшевка Веке
+Новокотовск
+Новосавицкая, н.п.ж.-д.ст.
+Приозёрное
+Уютное
+Гидирим
+Ягорлык
+Хараба
+Хармацка
+Хыржэу
+Михайловка Ноуэ
+Сэрэцей
+Бруслаки
+Мариан
+Мокряки
+Хлиная
+Хрушка
+Фрунзэука
+Жура
+Ленин
+Станиславка
+Лунга
+Мокра
+Басарабка
+Шевченко
+Запорожец
+Молокишул Маре
+Незавертайловка
+Офатинць
+Новая Жизнь
+Подойма
+Подоймица
+Попенку
+Киров
+Зэзулень
+Рашков
+Янтарное
+Ротарь
+Бодень
+Соколовка
+Севериновка
+Слобозия-Рашков
+Советское
+Спея
+Строешть
+Суклея
+Весёлое
+Ташлык
+Тею
+Токмаджиу
+Тырнаука
+Цыбулеука
+Лысая Гора
+Улмул Мик
+Вадул Туркулуй
+Молокишул Мик
+Валя Адынкэ
+Буски
+Гершуновка
+Виноградное
+Никольское
+`;
+localities.push(...suppliedLocalityText.split(/\r?\n/).map(x=>x.trim()).filter(Boolean));
+// Районы города вводятся без префикса «Сектор».
+localities.push('Ботаника','Буюканы','Центр','Чеканы','Рышкань');
+
+// Remove duplicates while preserving the first spelling shown in suggestions.
+const cleanedLocalities = localities.map(x=>String(x).replace(/^сектор\s+/i,'').trim()).filter(Boolean);
+const uniqueLocalities = [...new Map(cleanedLocalities.map(x=>[normalizePlace(x),x])).values()];
+localities.length=0;localities.push(...uniqueLocalities);
 const districts = ['Центр','Ботаника','Буюканы','Рышкановка','Чеканы','Телецентр','Скулянка','Старая Почта','Малая Малина','Другое'];
 function normalizePlace(value){return String(value||'').toLocaleLowerCase('ru').normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[ăâ]/g,'a').replace(/[î]/g,'i').replace(/[ș]/g,'s').replace(/[ț]/g,'t').replace(/[^a-zа-яё0-9]/gi,'')}
 function initLocalitySuggestions(){
  const dl=el('localitySuggestions');dl.innerHTML=localities.map(x=>'<option value="'+escapeHtml(x)+'"></option>').join('');
+}
+// Загружает полный перечень населённых пунктов из страницы-справочника при первом подключении к интернету.
+// Список кешируется локально; существующие русские варианты и районы Кишинёва сохраняются.
+async function loadAllMoldovaLocalities(){
+ const cacheKey='md_all_localities_ro_v1';
+ const mergeNames=names=>{
+  const merged=[...localities,...names].map(x=>String(x||'').trim()).filter(x=>x.length>1&&x.length<90);
+  const seen=new Set();localities.length=0;
+  for(const name of merged){const key=normalizePlace(name);if(key&&!seen.has(key)){seen.add(key);localities.push(name)}}
+  initLocalitySuggestions();
+ };
+ try{
+  const cached=localStorage.getItem(cacheKey);
+  if(cached){const parsed=JSON.parse(cached);if(Array.isArray(parsed)&&parsed.length>1000){mergeNames(parsed);return}}
+ }catch(e){}
+ try{
+  const url='https://en.wikipedia.org/w/api.php?action=parse&page=List_of_localities_in_Moldova&prop=text&format=json&origin=*';
+  const response=await fetch(url,{cache:'no-store'});if(!response.ok)throw new Error('Locality source unavailable');
+  const data=await response.json();const html=data&&data.parse&&data.parse.text&&data.parse.text['*'];if(!html)throw new Error('Locality list missing');
+  const doc=new DOMParser().parseFromString(html,'text/html');const root=doc.querySelector('.mw-parser-output');if(!root)throw new Error('Locality list format changed');
+  const stopHeading=Array.from(root.querySelectorAll('h2')).find(h=>/see also|references|external links/i.test(h.textContent||''));
+  if(stopHeading){let node=stopHeading;while(node){const next=node.nextElementSibling;node.remove();node=next}}
+  const names=[];
+  root.querySelectorAll('li').forEach(li=>{
+   const clone=li.cloneNode(true);clone.querySelectorAll('ul,ol,sup,.mw-editsection,.reference,style,script').forEach(n=>n.remove());
+   const name=(clone.textContent||'').replace(/\[[^\]]*\]/g,' ').replace(/\b(edit|edit source)\b/gi,' ').replace(/\s+/g,' ').trim();
+   if(name.length>=2&&name.length<=80&&!/^(cities\/towns|communes|see also|references|external links)$/i.test(name)&&!/^\d+$/.test(name))names.push(name);
+  });
+  const unique=[...new Map(names.map(n=>[normalizePlace(n),n])).values()];
+  if(unique.length<1000)throw new Error('Incomplete locality list');
+  localStorage.setItem(cacheKey,JSON.stringify(unique));mergeNames(unique);
+ }catch(err){console.warn('Could not refresh the complete Moldova locality list; keeping the built-in list.',err)}
 }
 function renderLocalityMatches(){
  const input=el('customerArea'),box=el('localityMatches'),q=normalizePlace(input.value);
@@ -380,12 +1771,12 @@ function orderQty(c,kind){const o=clientOrder(c);return o[kind+'Boxes']*BOX_SIZE
 function orderTotal(c){return orderQty(c,'chicken')*PRICE.chicken+orderQty(c,'pork')*PRICE.pork}
 function orderDescription(c){const cb=clientOrder(c);if(!cb.chickenBoxes&&!cb.chickenCans&&!cb.porkBoxes&&!cb.porkCans)return 'Не указан';return 'Курица: '+cb.chickenBoxes+' ящ. + '+cb.chickenCans+' бан. ('+orderQty(c,'chicken')+' бан.) · Свинина: '+cb.porkBoxes+' ящ. + '+cb.porkCans+' бан. ('+orderQty(c,'pork')+' бан.)'}
 function updateCustomerOrderPreview(){const c=num('customerChickenBoxes')*BOX_SIZE+num('customerChickenCans'),p=num('customerPorkBoxes')*BOX_SIZE+num('customerPorkCans');el('customerOrderCans').textContent=fmt(c+p);el('customerOrderTotal').textContent=money(c*PRICE.chicken+p*PRICE.pork)}
-function selectClientForForm(id){const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;editingClientId=c.id;el('customerPhone').value=c.phone||'';el('customerArea').value=c.area||'';el('customerAddress').value=c.address||'';const o=clientOrder(c);el('customerChickenBoxes').value=o.chickenBoxes||'';el('customerChickenCans').value=o.chickenCans||'';el('customerPorkBoxes').value=o.porkBoxes||'';el('customerPorkCans').value=o.porkCans||'';updateCustomerOrderPreview();el('clientFormTitle').textContent='Изменить клиента';el('saveCustomer').textContent='Сохранить и добавить в список';el('cancelCustomerEdit').style.display='block';el('clientSuggestions').style.display='none'}
+function selectClientForForm(id){const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;editingClientId=c.id;el('customerPhone').value=c.phone||'';el('customerArea').value=c.area||'';el('customerAddress').value=c.address||'';/* Заказ всегда вводится заново для каждого нового выезда. */['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Новый заказ клиента';el('saveCustomer').textContent='Сохранить и добавить в список';el('cancelCustomerEdit').style.display='block';el('clientSuggestions').style.display='none'}
 function resetClientForm(){editingClientId=null;el('customerPhone').value='';el('customerArea').value='';el('customerAddress').value='';['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Добавить клиента';el('saveCustomer').textContent='Добавить клиента';el('cancelCustomerEdit').style.display='none';el('clientSuggestions').style.display='none'}
 function undeliveredClientLine(c){
  const note=String(c.importNote||'').trim();
  const order=note||orderDescription(c);
- return (c.phone||'Без телефона')+' — '+(c.area||'Район не указан')+' — '+order;
+ return (c.phone||'Без телефона')+' — '+(c.area||'Район не указан')+' — '+order+(c.deliveryOriginal?'\nИсходный текст: '+c.deliveryOriginal:'');
 }
 function undeliveredReportText(){
  const active=data.clients.filter(c=>c.active!==false);
@@ -427,7 +1818,7 @@ function showClientDetail(id){
   if(chicken+pork===0){toast('Сначала укажи количество тушёнки в заказе');return}
   if(chicken>data.stock.chicken||pork>data.stock.pork){toast('Не хватает товара на складе: проверь остатки');return}
   const sale={id:makeId(),date:new Date().toISOString(),client:c.phone,clientId:c.id,chicken,pork,total:sum,card:el('clientPaidByCard').checked,onCredit:false,owed:0};
-  data.stock.chicken-=chicken;data.stock.pork-=pork;data.sold.chicken+=chicken;data.sold.pork+=pork;data.sales.unshift(sale);data.actualCash=null;data.cashCheckDate=null;c.lastOrder=orderDescription(c);c.lastSaleAt=sale.date;c.active=false;
+  data.stock.chicken-=chicken;data.stock.pork-=pork;data.sold.chicken+=chicken;data.sold.pork+=pork;data.sales.unshift(sale);data.actualCash=null;data.cashCheckDate=null;c.lastSaleAt=sale.date;c.active=false;c.chickenBoxes=0;c.chickenCans=0;c.porkBoxes=0;c.porkCans=0;c.importNote='';c.deliveryOriginal='';
   saveData();box.style.display='none';renderClients();renderDashboard();renderBuy();renderSell();renderReport();toast('Заказ завершён, клиент убран из активного списка');
  });
  el('clientEditBtn').addEventListener('click',()=>{openClientForm();selectClientForForm(c.id)});
@@ -435,31 +1826,75 @@ function showClientDetail(id){
 let parsedDeliveryClients=[];
 function parseDeliveryLine(raw){
  const line=String(raw||'').trim();if(!line)return null;
- const phoneMatch=line.match(/^\s*(?:\+?\d{1,3}\s*)?(?:\(\d{2,3}\)\s*)?\d{5,8}\b/);if(!phoneMatch)return null;
- const phone=phoneMatch[0].trim(), digits=normalizePhone(phone);if(digits.length<7)return null;
+ // Extract a phone independently of order numbers, so a leading quantity is not mistaken for the phone.
+ const phoneCandidates=line.match(/(?:\+?\d[\d\s().\-/]{5,}\d)/g)||[];
+ const phoneMatch=phoneCandidates.map(v=>({raw:v.trim().replace(/[.,;:]+$/,''),digits:normalizePhone(v)}))
+   .filter(v=>v.digits.length>=8&&v.digits.length<=15)
+   .sort((a,b)=>b.digits.length-a.digits.length)[0];
+ if(!phoneMatch)return null;
+ const phone=phoneMatch.raw, digits=phoneMatch.digits;
  const normalized=normalizePlace(line);
- const qtyMatch=line.match(/\b(\d+)\s*(?:cutii?|cutie|cutii|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\.?|шт\.?)/i);
- const qty=qtyMatch?Math.max(0,parseInt(qtyMatch[1],10)||0):null;
  const productText=normalized;
- let kind='';if(/porc|svin|свин/.test(productText))kind='pork';else if(/pasare|pui|gaina|chicken|куриц/.test(productText))kind='chicken';
- // Prefer known locality aliases, longest first, so the place can appear before or after the quantity.
- const aliases=[
-  ['Rascanovca','Рышкановка'],['Rascani','Рышкановка'],['Rîșcani','Рышкановка'],['Rîscani','Рышкановка'],['Rascan','Рышкановка'],['Rășcanovca','Рышкановка'],
-  ['Poștă veche','Старая Почта'],['Poșta veche','Старая Почта'],['Poșta Veche','Старая Почта'],['Posta veche','Старая Почта'],
-  ['Gratiesti','Гратиешты'],['Grătiești','Гратиешты'],['Ghidhighici','Гидигич'],['Ghidighici','Гидигич'],['Buiucani','Буюканы'],['Botanica','Ботаника'],['Centru','Центр'],['Ciocana','Чеканы'],['Bubuieci','Бубуечь'],['Budești','Будешты'],['Budesti','Будешты'],['Băcioi','Бачой'],['Bacioi','Бачой'],['Cricova','Крикова'],['Cruzești','Крузешты'],['Colonița','Колоница'],['Codru','Кодру'],['Durlești','Дурлешты'],['Sîngera','Сынжера'],['Singera','Сынжера'],['Stăuceni','Ставчены'],['Stauceni','Ставчены'],['Tohatin','Тохатин'],['Trușeni','Трушень'],['Truseni','Трушень'],['Vatra','Ватра'],['Telecentru','Телецентр'],['Sculeanca','Скулянка']
- ];
- let area='';for(const [alias,canonical] of aliases.sort((a,b)=>b[0].length-a[0].length)){if(normalized.includes(normalizePlace(alias))){area=canonical;break}}
- if(!area){
-  const before=line.slice(phoneMatch.index+phoneMatch[0].length,qtyMatch?qtyMatch.index:line.length).replace(/[.,:;\-]+/g,' ').trim();
-  const after=qtyMatch?line.slice(qtyMatch.index+qtyMatch[0].length).replace(/\b(porc|pasare|pui|mixt|mixte|mixed)\b/ig,'').replace(/[.,:;\-]+/g,' ').trim():'';
-  area=(before||after).replace(/\b(porc|pasare|pui|mixt|mixte|mixed)\b/ig,'').trim();
+ let kind='';
+ if(/porc|svin|свин|porcina|carneporc/.test(productText))kind='pork';
+ else if(/pasare|pui|gaina|chicken|куриц|gain|carnepui/.test(productText))kind='chicken';
+ // Find quantities with their units. If a line contains a clear cans/unit marker, record cans; otherwise boxes.
+ const qtyRegex=/(\d{1,3})\s*(cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|buc(?:ati|ăți)?|buc\.?|banca|bănci|бан(?:ка|ки|ок)?|ящик(?:а|ов)?|ящ\.?|шт\.?|bani?)(?![\p{L}])/giu;
+ const quantities=[];let qm;
+ while((qm=qtyRegex.exec(line))!==null){
+  const unit=normalizePlace(qm[2]);
+  const cans=/buc|banc|ban|шт/.test(unit);
+  quantities.push({qty:Math.max(0,parseInt(qm[1],10)||0),cans,at:qm.index,length:qm[0].length});
  }
- if(!area)area='';
- const client={phone,area,address:'',chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
- // Only fill product quantities when the list explicitly says which product they want.
- if(qty!==null&&kind==='chicken')client.chickenBoxes=qty;
- if(qty!==null&&kind==='pork')client.porkBoxes=qty;
- client.importNote=(qty===null?'':qty+' '+(qty===1?'ящик':'ящика'))+(kind?' · '+(kind==='chicken'?'куриная':'свиная'):'');client.deliveryOriginal=line;
+ // Also understand compact common formats like "pui 3", "porc-2" or "3 pui".
+ if(!quantities.length){
+  const bare=line.match(/(?:^|\s)(\d{1,3})(?=\s*(?:pui|porc|chicken|svin|куриц|свин))/i);
+  if(bare)quantities.push({qty:parseInt(bare[1],10)||0,cans:false,at:bare.index,length:bare[0].length});
+ }
+ // Match the longest known place name regardless of accents, punctuation, or whether it is written in Romanian/Russian.
+ let area='';
+ const aliases=[
+  ['Chișinău','Кишинёв'],['Chisinau','Кишинёв'],['Кишинев','Кишинёв'],['Anenii Noi','Новые Анены'],['Bălți','Бельцы'],['Balti','Бельцы'],['Bender','Бендеры'],['Tighina','Бендеры'],['Căușeni','Каушаны'],['Causeni','Каушаны'],['Călărași','Калараш'],['Calarasi','Калараш'],['Ștefan Vodă','Штефан-Водэ'],['Stefan Voda','Штефан-Водэ'],['Ceadîr-Lunga','Чадыр-Лунга'],['Ceadir-Lunga','Чадыр-Лунга'],['Vulcănești','Вулканешты'],['Vulcanesti','Вулканешты'],['Rîbnița','Рыбница'],['Ribnita','Рыбница'],['Dubăsari','Дубоссары'],['Dubasari','Дубоссары'],['Dondușeni','Дондюшаны'],['Donduseni','Дондюшаны'],['Edineț','Единцы'],['Edinet','Единцы'],['Fălești','Фалешты'],['Falesti','Фалешты'],['Florești','Флорешты'],['Floresti','Флорешты'],['Hîncești','Хынчешты'],['Hincesti','Хынчешты'],['Ialoveni','Яловены'],['Ocnița','Окница'],['Ocnita','Окница'],['Rîșcani','Рышканы'],['Riscani','Рышканы'],['Sîngerei','Сынжерей'],['Singerei','Сынжерей'],['Șoldănești','Шолданешты'],['Soldanesti','Шолданешты'],['Strășeni','Стрэшены'],['Straseni','Стрэшены'],['Telenești','Теленешты'],['Telenesti','Теленешты'],['Comrat','Комрат'],['Tiraspol','Тирасполь'],['Soroca','Сороки'],['Orhei','Оргеев'],['Ungheni','Унгены'],['Cahul','Кагул'],['Criuleni','Криулень'],['Drochia','Дрокия'],['Glodeni','Глодяны'],['Nisporeni','Ниспорены'],['Basarabeasca','Басарабяска'],['Cimișlia','Чимишлия'],['Cimislia','Чимишлия'],['Briceni','Бричаны'],['Cantemir','Кантемир'],['Leova','Леова'],['Taraclia','Тараклия'],['Cricova','Крикова'],['Peresecina','Пересечина'],['Peresečina','Пересечина'],['Peresecina sat','Пересечина'],['Noroceni','Норочены'],['Ciocîlteni','Чокылтень'],['Ciocilteni','Чокылтень'],['Rădoaia','Рэдоая'],['Radoaia','Рэдоая'],['Domulgeni','Домулжень'],['Chetrosu','Кетросу'],['Moara de Piatră','Моара-де-Пятрэ'],['Moara de Piatra','Моара-де-Пятрэ'],['Sărata Veche','Сэрата-Веке'],['Sarata Veche','Сэрата-Веке'],['Gura Camencii','Гура-Каменчий'],['Durlești','Дурлешты'],['Durlești','Дурлешты'],['Sîngera','Сынжера'],['Singera','Сынжера'],['Stăuceni','Ставчены'],['Stauceni','Ставчены'],['Trușeni','Трушень'],['Truseni','Трушень'],['Bubuieci','Бубуечь'],['Budești','Будешты'],['Budesti','Будешты'],['Băcioi','Бачой'],['Bacioi','Бачой'],['Grătiești','Гратиешты'],['Gratiesti','Гратиешты'],['Ghidighici','Гидигич'],['Ghidhighici','Гидигич'],['Poșta Veche','Старая Почта'],['Posta Veche','Старая Почта'],['Buiucani','Буюканы'],['Botanica','Ботаника'],['Ciocana','Чеканы'],['Centru','Центр'],['Telecentru','Телецентр'],['Sculeanca','Скулянка'],['Vadul lui Vodă','Вадул-луй-Водэ'],['Vadul-lui-Vodă','Вадул-луй-Водэ'],['Colonița','Колоница'],['Cruzești','Крузешты'],['Ciorescu','Чореску']
+ ];
+ const aliasMap=new Map();
+ for(const [a,c] of aliases)aliasMap.set(normalizePlace(a),c);
+ for(const name of localities){const key=normalizePlace(name);if(key.length>=4&&!aliasMap.has(key))aliasMap.set(key,name)}
+ const found=[...aliasMap.entries()].filter(([key])=>key.length>=4&&normalized.includes(key)).sort((a,b)=>b[0].length-a[0].length)[0];
+ if(found)area=found[1];
+ if(!area){
+  // Fall back to text remaining after phone, quantities, and product words; keep it for manual correction.
+  let leftover=line.replace(phone,' ');
+  for(const q of quantities)leftover=leftover.replace(q.qty+' '+line.slice(q.at+String(q.qty).length,q.at+q.length).trim(),' ');
+  leftover=leftover.replace(/\b(porc|porcin[ăa]|pasare|pui|gaina|găină|mixt|mixte|mixed|chicken|svina|svin|cutii?|cutie|lazi?|lada|lăzi|ladă|buc(?:ati|ăți)?|buc\.?|banca|bănci|box(?:e|es)?|ящик(?:а|ов)?|ящ\.?|бан(?:ка|ки|ок)?|шт\.?)\b/ig,' ')
+   .replace(/[+()\[\]{},:;]+/g,' ').replace(/\s+/g,' ').trim();
+  area=leftover;
+ }
+ // Separate a detected locality from the remaining address text, instead of discarding the address on import.
+ let address='';
+ if(found){
+  let rest=line.replace(phoneMatch.raw,' ');
+  // Remove the detected locality spelling (including Romanian/Russian aliases) from the original line.
+  const placeSpellings=[...localities,...aliases.filter(([,canonical])=>normalizePlace(canonical)===normalizePlace(area)).map(([name])=>name)]
+   .filter(name=>normalizePlace(name)===normalizePlace(area)).sort((a,b)=>b.length-a.length);
+  for(const spelling of placeSpellings){
+   const escaped=spelling.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'[\\s-]*');
+   try{rest=rest.replace(new RegExp(escaped,'ig'),' ')}catch(e){}
+  }
+  // Strip order quantities, product names and common delivery notes; preserve useful street/house details.
+  rest=rest.replace(/\([^)]*\)/g,' ')
+   .replace(/\b\d{1,3}\s*(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|buc(?:ati|ăți)?|buc\.?|banca|bănci|бан(?:ка|ки|ок)?|ящик(?:а|ов)?|ящ\.?|шт\.?|bani?)\b/giu,' ')
+   .replace(/\b(?:porc|porcin[ăa]|pasare|păsare|pui|gaina|găină|mixt|mixte|mixed|chicken|svina|svin|куриц[аы]?|свин[ина]?|urgent|urgentă|de sunat din timp|nu a răspuns|vine la|unde îi spui)\b/giu,' ')
+   .replace(/[🚨📞⭐️+()\[\]{},:;.!?]+/gu,' ').replace(/\s+/g,' ').trim();
+  if(rest.length>1&&!/^(de duminică|pe marți|pe marti|urgent)$/i.test(rest))address=rest;
+ }
+ const client={phone,area:area||'',address,chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
+ if(kind&&quantities.length){
+  const q=quantities[0];const field=kind+(q.cans?'Cans':'Boxes');client[field]=q.qty;
+ }else if(kind){
+  // No explicit amount: do not invent an order quantity, but keep product noted for review.
+ }
+ client.importNote=(quantities.length?quantities.map(q=>q.qty+' '+(q.cans?'бан.':'ящ.')).join(' + '):'')+(kind?' · '+(kind==='chicken'?'курица':'свинина'):'');
+ client.deliveryOriginal=line;
  return client;
 }
 function previewDeliveryList(){
@@ -467,15 +1902,14 @@ function previewDeliveryList(){
  parsedDeliveryClients=lines.map(parseDeliveryLine).filter(Boolean);
  const box=el('deliveryListPreview'),btn=el('importDeliveryClients');
  if(!parsedDeliveryClients.length){box.innerHTML='<p class="smallnote">Не получилось распознать клиентов. Проверь, что в строках есть номера телефонов.</p>';btn.style.display='none';return}
- box.innerHTML='<p class="smallnote">Найдено клиентов: <b>'+parsedDeliveryClients.length+'</b>. Проверь список перед добавлением:</p>'+parsedDeliveryClients.map((c,i)=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Район не распознан')+'</span></div><p><b>Заказ:</b> '+escapeHtml(orderDescription(c))+(c.importNote&&!c.chickenBoxes&&!c.porkBoxes?' · '+escapeHtml(c.importNote):'')+'</p></div>').join('');
+ box.innerHTML='<p class="smallnote">Найдено клиентов: <b>'+parsedDeliveryClients.length+'</b>. Проверь список перед добавлением. Исходный текст сохраняется без перевода:</p>'+parsedDeliveryClients.map((c,i)=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Район не распознан')+'</span></div><p><b>Исходная строка:</b> '+escapeHtml(c.deliveryOriginal||'')+'<br><b>Распознано:</b> '+escapeHtml(orderDescription(c))+(c.importNote&&!c.chickenBoxes&&!c.porkBoxes?' · '+escapeHtml(c.importNote):'')+'</p></div>').join('');
  btn.style.display='block';
 }
 function importDeliveryList(){
  let added=0,updated=0,skipped=0;const now=new Date().toISOString();
  for(const item of parsedDeliveryClients){
   let existing=data.clients.find(c=>normalizePhone(c.phone)===normalizePhone(item.phone));
-  if(existing){Object.assign(existing,{phone:item.phone,area:item.area||existing.area||'',address:existing.address||'',active:true,updatedAt:now,importNote:item.importNote||'',deliveryOriginal:item.deliveryOriginal||item.phone});
-   if(item.chickenBoxes||item.porkBoxes||item.chickenCans||item.porkCans)Object.assign(existing,{chickenBoxes:item.chickenBoxes,chickenCans:item.chickenCans,porkBoxes:item.porkBoxes,porkCans:item.porkCans});
+  if(existing){Object.assign(existing,{phone:item.phone,area:item.area||existing.area||'',address:item.address||existing.address||'',active:true,updatedAt:now,importNote:item.importNote||'',deliveryOriginal:item.deliveryOriginal||item.phone,chickenBoxes:Number(item.chickenBoxes)||0,chickenCans:Number(item.chickenCans)||0,porkBoxes:Number(item.porkBoxes)||0,porkCans:Number(item.porkCans)||0});
    updated++;
   }else{data.clients.unshift({id:makeId(),...item,createdAt:now,updatedAt:now});added++}
  }
@@ -485,7 +1919,7 @@ el('toggleImportClients').addEventListener('click',()=>{const body=el('importCli
 el('copyUndelivered').addEventListener('click',async()=>{const text=undeliveredReportText();try{await navigator.clipboard.writeText(text);toast('Список невыполненных заказов скопирован')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();toast(ok?'Список невыполненных заказов скопирован':'Не удалось скопировать список')}});
 el('previewDeliveryList').addEventListener('click',previewDeliveryList);el('importDeliveryClients').addEventListener('click',importDeliveryList);
 
-initLocalitySuggestions();el('customerArea').addEventListener('input',renderLocalityMatches);el('customerArea').addEventListener('change',()=>{el('localityMatches').style.display='none'});el('showAddClient').addEventListener('click',openClientForm);el('closeClientForm').addEventListener('click',closeClientForm);el('customerPhone').addEventListener('input',renderClientSuggestions);el('clientSearch').addEventListener('input',renderClients);el('cancelCustomerEdit').addEventListener('click',resetClientForm);
+initLocalitySuggestions();loadAllMoldovaLocalities();el('customerArea').addEventListener('input',renderLocalityMatches);el('customerArea').addEventListener('change',()=>{el('localityMatches').style.display='none'});el('showAddClient').addEventListener('click',openClientForm);el('closeClientForm').addEventListener('click',closeClientForm);el('customerPhone').addEventListener('input',renderClientSuggestions);el('clientSearch').addEventListener('input',renderClients);el('cancelCustomerEdit').addEventListener('click',resetClientForm);
 ['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).addEventListener('input',updateCustomerOrderPreview));
 el('saveCustomer').addEventListener('click',()=>{
  const phone=el('customerPhone').value.trim(),phoneDigits=normalizePhone(phone),address=el('customerAddress').value.trim(),area=el('customerArea').value.trim();
