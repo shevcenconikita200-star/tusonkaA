@@ -179,10 +179,11 @@ nav button{font-size:10px;padding-left:0;padding-right:0}
    <div id="localityMatches" class="client-suggestions" style="display:none"></div>
   </div>
   <div class="field"><label for="customerAddress">Адрес</label><input id="customerAddress" type="text" autocomplete="street-address" placeholder="Улица, дом, подъезд"></div>
+  <div class="field"><label for="customerNote">Примечание</label><textarea id="customerNote" rows="3" placeholder="Оригинальное сообщение от шефа или своё примечание"></textarea><p class="smallnote">Можно хранить оригинальное сообщение или изменить его вручную.</p></div>
   <div class="field"><label>Заказ клиента</label>
    <div class="saleitem"><div><h3 class="product-tag chicken"><i class="product-dot"></i>Куриная</h3><p>85 лей/банка</p></div><div class="row"><div><label for="customerChickenBoxes">Ящиков</label><input id="customerChickenBoxes" type="number" min="0" step="1"></div><div><label for="customerChickenCans">Отдельных банок</label><input id="customerChickenCans" type="number" min="0" step="1"></div></div></div>
    <div class="saleitem"><div><h3 class="product-tag pork"><i class="product-dot"></i>Свиная</h3><p>95 лей/банка</p></div><div class="row"><div><label for="customerPorkBoxes">Ящиков</label><input id="customerPorkBoxes" type="number" min="0" step="1"></div><div><label for="customerPorkCans">Отдельных банок</label><input id="customerPorkCans" type="number" min="0" step="1"></div></div></div>
-   <p class="smallnote">Всего банок: <b id="customerOrderCans">0</b></p><div class="bigtotal"><div class="caption">Сумма к оплате за заказ</div><strong id="customerOrderTotal">0 лей</strong></div>
+   <div class="saleitem" style="opacity:.78"><div><h3 class="product-tag"><i class="product-dot"></i>Третий вид тушёнки</h3><p>Название и цена будут добавлены позже</p></div><div class="row"><div><label>Ящиков</label><input type="number" disabled placeholder="Позже"></div><div><label>Отдельных банок</label><input type="number" disabled placeholder="Позже"></div></div></div><p class="smallnote">Всего банок: <b id="customerOrderCans">0</b></p><div class="bigtotal"><div class="caption">Сумма к оплате за заказ</div><strong id="customerOrderTotal">0 лей</strong></div>
   </div>
   <button class="primary" id="saveCustomer">Добавить клиента</button>
   <button class="secondary" id="cancelCustomerEdit" style="display:none;margin-top:8px">Отменить редактирование</button>
@@ -200,6 +201,7 @@ nav button{font-size:10px;padding-left:0;padding-right:0}
    <div class="stat"><span>📈 Продажи сегодня</span><strong id="dashSales">0 лей</strong></div>
    <div class="stat"><span>💵 Наличные сегодня</span><strong id="dashCash">0 лей</strong></div>
    <div class="stat"><span>💳 Картой сегодня</span><strong id="dashCard">0 лей</strong></div>
+   <div class="stat"><span>👥 Осталось клиентов</span><strong id="dashClients">0</strong></div>
   </div>
  </div>
  <div class="card home-action-card">
@@ -305,6 +307,9 @@ nav button{font-size:10px;padding-left:0;padding-right:0}
 const BOX_SIZE=13;
 const PRICE={chicken:85,pork:95};
 const STORE_KEY='tushenka-accounting-v2';
+const CLIENT_NOTES_KEY='tushenka-client-notes-v1';
+function readClientNotes(){try{return JSON.parse(localStorage.getItem(CLIENT_NOTES_KEY)||'{}')}catch(e){return {}}}
+function writeClientNotes(clients){const notes=readClientNotes();for(const c of clients||[]){const key=normalizePhone(c.phone);if(!key)continue;if(String(c.note||'').trim())notes[key]=String(c.note).trim();else if(Object.prototype.hasOwnProperty.call(notes,key))delete notes[key]}localStorage.setItem(CLIENT_NOTES_KEY,JSON.stringify(notes))}
 const el=id=>document.getElementById(id);
 const num=id=>Math.max(0,Math.floor(Number(el(id).value)||0));
 const saleQty=kind=>num('sell'+kind+'Boxes')*BOX_SIZE+num('sell'+kind+'Cans');
@@ -319,11 +324,11 @@ const makeId=()=>Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,
 function loadData(){
  try{
   const s=JSON.parse(localStorage.getItem(STORE_KEY)||'{}');
-  return {stock:{chicken:Number(s.stock?.chicken)||0,pork:Number(s.stock?.pork)||0},sold:{chicken:Number(s.sold?.chicken)||0,pork:Number(s.sold?.pork)||0},sales:Array.isArray(s.sales)?s.sales.map((x,i)=>({...x,id:x.id||('legacy-'+i+'-'+String(x.date||''))})):[],expenses:Number(s.expenses)||0,fuel:Number(s.fuel)||0,reports:Array.isArray(s.reports)?s.reports:[],clients:Array.isArray(s.clients)?s.clients.map(c=>({...c,active:c.active!==false,chickenBoxes:Number(c.chickenBoxes)||0,chickenCans:Number(c.chickenCans)||0,porkBoxes:Number(c.porkBoxes)||0,porkCans:Number(c.porkCans)||0})):[],actualCash:s.actualCash===null||s.actualCash===undefined?null:Number(s.actualCash),cashCheckDate:s.cashCheckDate||null};
+  return {stock:{chicken:Number(s.stock?.chicken)||0,pork:Number(s.stock?.pork)||0},sold:{chicken:Number(s.sold?.chicken)||0,pork:Number(s.sold?.pork)||0},sales:Array.isArray(s.sales)?s.sales.map((x,i)=>({...x,id:x.id||('legacy-'+i+'-'+String(x.date||''))})):[],expenses:Number(s.expenses)||0,fuel:Number(s.fuel)||0,reports:Array.isArray(s.reports)?s.reports:[],clients:Array.isArray(s.clients)?s.clients.map(c=>({...c,note:String(c.note||readClientNotes()[normalizePhone(c.phone)]||''),active:c.active!==false,chickenBoxes:Number(c.chickenBoxes)||0,chickenCans:Number(c.chickenCans)||0,porkBoxes:Number(c.porkBoxes)||0,porkCans:Number(c.porkCans)||0})):[],actualCash:s.actualCash===null||s.actualCash===undefined?null:Number(s.actualCash),cashCheckDate:s.cashCheckDate||null};
  }catch(e){return {stock:{chicken:0,pork:0},sold:{chicken:0,pork:0},sales:[],expenses:0,fuel:0,reports:[],clients:[],actualCash:null,cashCheckDate:null}}
 }
 let data=loadData();
-function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data))}
+function saveData(){localStorage.setItem(STORE_KEY,JSON.stringify(data));writeClientNotes(data.clients)}
 function toast(message){const t=el('toast');const success=/добавлены в остаток|продажа записана|отчёт сохранён|отчёт за сегодня обновлён|отчёт скопирован|результат проверки кассы сохранён/i.test(message);t.innerHTML=success?'<span class="success-mark">✓</span>'+message:message;t.classList.remove('show');void t.offsetWidth;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2400)}
 function askConfirm({title='Подтвердить действие',message='Ты уверен, что хочешь продолжить?',okText='Да, продолжить',danger=true,icon='!'}={}){
  return new Promise(resolve=>{
@@ -1771,8 +1776,8 @@ function orderQty(c,kind){const o=clientOrder(c);return o[kind+'Boxes']*BOX_SIZE
 function orderTotal(c){return orderQty(c,'chicken')*PRICE.chicken+orderQty(c,'pork')*PRICE.pork}
 function orderDescription(c){const cb=clientOrder(c);if(!cb.chickenBoxes&&!cb.chickenCans&&!cb.porkBoxes&&!cb.porkCans)return 'Не указан';return 'Курица: '+cb.chickenBoxes+' ящ. + '+cb.chickenCans+' бан. ('+orderQty(c,'chicken')+' бан.) · Свинина: '+cb.porkBoxes+' ящ. + '+cb.porkCans+' бан. ('+orderQty(c,'pork')+' бан.)'}
 function updateCustomerOrderPreview(){const c=num('customerChickenBoxes')*BOX_SIZE+num('customerChickenCans'),p=num('customerPorkBoxes')*BOX_SIZE+num('customerPorkCans');el('customerOrderCans').textContent=fmt(c+p);el('customerOrderTotal').textContent=money(c*PRICE.chicken+p*PRICE.pork)}
-function selectClientForForm(id){const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;editingClientId=c.id;el('customerPhone').value=c.phone||'';el('customerArea').value=c.area||'';el('customerAddress').value=c.address||'';/* Заказ всегда вводится заново для каждого нового выезда. */['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Новый заказ клиента';el('saveCustomer').textContent='Сохранить и добавить в список';el('cancelCustomerEdit').style.display='block';el('clientSuggestions').style.display='none'}
-function resetClientForm(){editingClientId=null;el('customerPhone').value='';el('customerArea').value='';el('customerAddress').value='';['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Добавить клиента';el('saveCustomer').textContent='Добавить клиента';el('cancelCustomerEdit').style.display='none';el('clientSuggestions').style.display='none'}
+function selectClientForForm(id){const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;editingClientId=c.id;el('customerPhone').value=c.phone||'';el('customerArea').value=c.area||'';el('customerAddress').value=c.address||'';el('customerNote').value=c.note||'';/* Заказ всегда вводится заново для каждого нового выезда. */['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Новый заказ клиента';el('saveCustomer').textContent='Сохранить и добавить в список';el('cancelCustomerEdit').style.display='block';el('clientSuggestions').style.display='none'}
+function resetClientForm(){editingClientId=null;el('customerPhone').value='';el('customerArea').value='';el('customerAddress').value='';el('customerNote').value='';['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).value='');updateCustomerOrderPreview();el('clientFormTitle').textContent='Добавить клиента';el('saveCustomer').textContent='Добавить клиента';el('cancelCustomerEdit').style.display='none';el('clientSuggestions').style.display='none'}
 function undeliveredClientLine(c){
  const note=String(c.importNote||'').trim();
  const order=note||orderDescription(c);
@@ -1780,8 +1785,9 @@ function undeliveredClientLine(c){
 }
 function undeliveredReportText(){
  const active=data.clients.filter(c=>c.active!==false);
- if(!active.length)return 'Не выполненные заказы\n\nВсе заказы выполнены.';
- return 'Не выполненные заказы\n\n'+active.map(undeliveredClientLine).join('\n')+'\n\nВсего клиентов: '+active.length;
+ // Для директора копируем только текущее содержимое поля «Примечание».
+ // Если примечание отредактировали, копируется именно изменённый текст.
+ return active.map(c=>String(c.note||'').trim()).filter(Boolean).join('\n');
 }
 function renderUndelivered(){
  const active=data.clients.filter(c=>c.active!==false);
@@ -1802,26 +1808,28 @@ function renderClients(){
  const visible=active.filter(c=>(!selectedClientDistrict||(c.area||'Другое')===selectedClientDistrict)&&(!q||String(c.phone||'').toLowerCase().includes(q)||normalizePhone(c.phone).includes(digits)||String(c.address||'').toLowerCase().includes(q)||String(c.area||'').toLowerCase().includes(q)||orderDescription(c).toLowerCase().includes(q)));
  const box=el('allClientsList');
  if(!visible.length)box.innerHTML='<div class="empty">'+(selectedClientDistrict?'В районе «'+escapeHtml(selectedClientDistrict)+'» пока нет активных клиентов.':'Нет активных клиентов. Нажми «Добавить клиента».')+'</div>';
- else box.innerHTML=(selectedClientDistrict?'<div class="cardhead"><h3>'+escapeHtml(selectedClientDistrict)+'</h3><button type="button" class="mini" id="clearDistrict">Все районы</button></div>':'')+visible.map(c=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Другое')+'</span></div><p><b>Адрес:</b> '+escapeHtml(c.address||'Не указан')+'<br><b>Заказ:</b> '+escapeHtml(orderDescription(c))+'<br><b>Сумма:</b> '+money(orderTotal(c))+'</p><div class="client-entry-actions"><button type="button" class="primary" data-open-client="'+escapeHtml(c.id)+'">Открыть клиента</button></div></div>').join('');
+ else box.innerHTML=(selectedClientDistrict?'<div class="cardhead"><h3>'+escapeHtml(selectedClientDistrict)+'</h3><button type="button" class="mini" id="clearDistrict">Все районы</button></div>':'')+visible.map(c=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Другое')+'</span></div><p><b>Адрес:</b> '+escapeHtml(c.address||'Не указан')+'<br><b>Примечание:</b> '+escapeHtml(c.note||'Нет')+'<br><b>Заказ:</b> '+escapeHtml(orderDescription(c))+'<br><b>Сумма:</b> '+money(orderTotal(c))+'</p><div class="client-entry-actions"><button type="button" class="primary" data-open-client="'+escapeHtml(c.id)+'">Открыть клиента</button><button type="button" class="danger" data-delete-client="'+escapeHtml(c.id)+'">Удалить клиента</button></div></div>').join('');
  const clear=el('clearDistrict');if(clear)clear.addEventListener('click',()=>{selectedClientDistrict=null;renderClients()});box.querySelectorAll('[data-open-client]').forEach(btn=>btn.addEventListener('click',()=>showClientDetail(btn.dataset.openClient)));
  const archived=data.clients.filter(c=>c.active===false&&(!q||String(c.phone||'').toLowerCase().includes(q)||normalizePhone(c.phone).includes(normalizePhone(q))||String(c.address||'').toLowerCase().includes(q)||String(c.area||'').toLowerCase().includes(q)));
  if(q&&archived.length){box.innerHTML+='<div class="smallnote" style="margin:14px 0 8px">Ранее обслуженные клиенты (сохранены в памяти)</div>'+archived.map(c=>'<div class="client-entry"><div class="client-entry-head"><strong>'+escapeHtml(c.phone)+'</strong><span class="price">'+escapeHtml(c.area||'Другое')+'</span></div><p>'+escapeHtml(c.address||'')+'<br>Последний заказ: '+escapeHtml(orderDescription(c))+'</p><div class="client-entry-actions"><button type="button" class="secondary" data-reactivate-client="'+escapeHtml(c.id)+'">Вернуть в список</button></div></div>').join('')}
  box.querySelectorAll('[data-reactivate-client]').forEach(btn=>btn.addEventListener('click',()=>{const c=data.clients.find(x=>String(x.id)===String(btn.dataset.reactivateClient));if(!c)return;c.active=true;saveData();selectedClientDistrict=c.area||'Другое';renderClients();toast('Клиент возвращён в список')}));
+ box.querySelectorAll('[data-delete-client]').forEach(btn=>btn.addEventListener('click',async()=>{const c=data.clients.find(x=>String(x.id)===String(btn.dataset.deleteClient));if(!c)return;if(!await askConfirm({title:'Удалить клиента?',message:'Клиент '+(c.phone||'без телефона')+' будет удалён из списка и архива. История уже записанных продаж останется.',okText:'Удалить клиента',danger:true,icon:'⌫'}))return;data.clients=data.clients.filter(x=>String(x.id)!==String(c.id));if(String(editingClientId)===String(c.id))resetClientForm();el('clientDetail').style.display='none';saveData();renderClients();toast('Клиент удалён')}));
 }
 function showClientDetail(id){
  const c=data.clients.find(x=>String(x.id)===String(id));if(!c)return;const box=el('clientDetail');box.style.display='block';
  const o=clientOrder(c),ch=orderQty(c,'chicken'),po=orderQty(c,'pork'),total=orderTotal(c);
- box.innerHTML='<div class="cardhead"><h3>Карточка клиента</h3><button type="button" class="mini" id="closeClientDetail">Закрыть</button></div><h3>'+escapeHtml(c.phone)+'</h3><p class="smallnote">'+escapeHtml(c.area||'Адрес не указан')+' · '+escapeHtml(c.address||'')+'</p><div class="client-entry-actions" style="margin:10px 0"><a class="primary action-link" href="intent://'+encodeURIComponent(normalizePhone(c.phone))+'#Intent;scheme=tel;action=android.intent.action.DIAL;end">Позвонить клиенту</a><a class="secondary action-link" href="geo:0,0?q='+encodeURIComponent([c.address,c.area].filter(Boolean).join(', '))+'">Поехать на адрес</a></div><div class="stockline"><span>Курица</span><strong>'+o.chickenBoxes+' ящ. + '+o.chickenCans+' бан. = '+ch+' бан.</strong></div><div class="stockline"><span>Свинина</span><strong>'+o.porkBoxes+' ящ. + '+o.porkCans+' бан. = '+po+' бан.</strong></div><div class="bigtotal"><div class="caption">Сумма к оплате за заказ</div><strong>'+money(total)+'</strong></div><label class="checkline"><input id="clientPaidByCard" type="checkbox"> Оплата картой</label><button class="primary" id="clientFinishOrder" style="width:100%;margin-top:10px">Завершить заказ</button><button class="secondary" id="clientEditBtn" style="width:100%;margin-top:8px">Изменить данные / заказ</button>';
+ box.innerHTML='<div class="cardhead"><h3>Карточка клиента</h3><button type="button" class="mini" id="closeClientDetail">Закрыть</button></div><h3>'+escapeHtml(c.phone)+'</h3><p class="smallnote">'+escapeHtml(c.area||'Адрес не указан')+' · '+escapeHtml(c.address||'')+'</p><p><b>Примечание:</b> '+escapeHtml(c.note||'Нет примечания')+'</p><div class="client-entry-actions" style="margin:10px 0"><a class="primary action-link" href="intent://'+encodeURIComponent(normalizePhone(c.phone))+'#Intent;scheme=tel;action=android.intent.action.DIAL;end">Позвонить клиенту</a><a class="secondary action-link" href="geo:0,0?q='+encodeURIComponent([c.address,c.area].filter(Boolean).join(', '))+'">Поехать на адрес</a></div><div class="stockline"><span>Курица</span><strong>'+o.chickenBoxes+' ящ. + '+o.chickenCans+' бан. = '+ch+' бан.</strong></div><div class="stockline"><span>Свинина</span><strong>'+o.porkBoxes+' ящ. + '+o.porkCans+' бан. = '+po+' бан.</strong></div><div class="bigtotal"><div class="caption">Сумма к оплате за заказ</div><strong>'+money(total)+'</strong></div><label class="checkline"><input id="clientPaidByCard" type="checkbox"> Оплата картой</label><button class="primary" id="clientFinishOrder" style="width:100%;margin-top:10px">Завершить заказ</button><button class="secondary" id="clientEditBtn" style="width:100%;margin-top:8px">Изменить данные / заказ</button><button class="danger" id="clientDeleteBtn" style="width:100%;margin-top:8px">Удалить клиента</button>';
  el('closeClientDetail').addEventListener('click',()=>box.style.display='none');
  el('clientFinishOrder').addEventListener('click',()=>{
   const chicken=orderQty(c,'chicken'),pork=orderQty(c,'pork'),sum=chicken*PRICE.chicken+pork*PRICE.pork;
   if(chicken+pork===0){toast('Сначала укажи количество тушёнки в заказе');return}
   if(chicken>data.stock.chicken||pork>data.stock.pork){toast('Не хватает товара на складе: проверь остатки');return}
   const sale={id:makeId(),date:new Date().toISOString(),client:c.phone,clientId:c.id,chicken,pork,total:sum,card:el('clientPaidByCard').checked,onCredit:false,owed:0};
-  data.stock.chicken-=chicken;data.stock.pork-=pork;data.sold.chicken+=chicken;data.sold.pork+=pork;data.sales.unshift(sale);data.actualCash=null;data.cashCheckDate=null;c.lastSaleAt=sale.date;c.active=false;c.chickenBoxes=0;c.chickenCans=0;c.porkBoxes=0;c.porkCans=0;c.importNote='';c.deliveryOriginal='';
+  data.stock.chicken-=chicken;data.stock.pork-=pork;data.sold.chicken+=chicken;data.sold.pork+=pork;data.sales.unshift(sale);data.actualCash=null;data.cashCheckDate=null;c.lastSaleAt=sale.date;c.active=false;c.chickenBoxes=0;c.chickenCans=0;c.porkBoxes=0;c.porkCans=0;c.importNote='';
   saveData();box.style.display='none';renderClients();renderDashboard();renderBuy();renderSell();renderReport();toast('Заказ завершён, клиент убран из активного списка');
  });
  el('clientEditBtn').addEventListener('click',()=>{openClientForm();selectClientForForm(c.id)});
+ el('clientDeleteBtn').addEventListener('click',async()=>{if(!await askConfirm({title:'Удалить клиента?',message:'Клиент '+(c.phone||'без телефона')+' будет удалён из списка и архива. История уже записанных продаж останется.',okText:'Удалить клиента',danger:true,icon:'⌫'}))return;data.clients=data.clients.filter(x=>String(x.id)!==String(c.id));saveData();box.style.display='none';renderClients();toast('Клиент удалён')});
 }
 let parsedDeliveryClients=[];
 function parseDeliveryLine(raw){
@@ -1861,33 +1869,10 @@ function parseDeliveryLine(raw){
  for(const name of localities){const key=normalizePlace(name);if(key.length>=4&&!aliasMap.has(key))aliasMap.set(key,name)}
  const found=[...aliasMap.entries()].filter(([key])=>key.length>=4&&normalized.includes(key)).sort((a,b)=>b[0].length-a[0].length)[0];
  if(found)area=found[1];
- if(!area){
-  // Fall back to text remaining after phone, quantities, and product words; keep it for manual correction.
-  let leftover=line.replace(phone,' ');
-  for(const q of quantities)leftover=leftover.replace(q.qty+' '+line.slice(q.at+String(q.qty).length,q.at+q.length).trim(),' ');
-  leftover=leftover.replace(/\b(porc|porcin[ăa]|pasare|pui|gaina|găină|mixt|mixte|mixed|chicken|svina|svin|cutii?|cutie|lazi?|lada|lăzi|ladă|buc(?:ati|ăți)?|buc\.?|banca|bănci|box(?:e|es)?|ящик(?:а|ов)?|ящ\.?|бан(?:ка|ки|ок)?|шт\.?)\b/ig,' ')
-   .replace(/[+()\[\]{},:;]+/g,' ').replace(/\s+/g,' ').trim();
-  area=leftover;
- }
- // Separate a detected locality from the remaining address text, instead of discarding the address on import.
- let address='';
- if(found){
-  let rest=line.replace(phoneMatch.raw,' ');
-  // Remove the detected locality spelling (including Romanian/Russian aliases) from the original line.
-  const placeSpellings=[...localities,...aliases.filter(([,canonical])=>normalizePlace(canonical)===normalizePlace(area)).map(([name])=>name)]
-   .filter(name=>normalizePlace(name)===normalizePlace(area)).sort((a,b)=>b.length-a.length);
-  for(const spelling of placeSpellings){
-   const escaped=spelling.replace(/[.*+?^${}()|[\]\\]/g,'\\$&').replace(/\s+/g,'[\\s-]*');
-   try{rest=rest.replace(new RegExp(escaped,'ig'),' ')}catch(e){}
-  }
-  // Strip order quantities, product names and common delivery notes; preserve useful street/house details.
-  rest=rest.replace(/\([^)]*\)/g,' ')
-   .replace(/\b\d{1,3}\s*(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|buc(?:ati|ăți)?|buc\.?|banca|bănci|бан(?:ка|ки|ок)?|ящик(?:а|ов)?|ящ\.?|шт\.?|bani?)\b/giu,' ')
-   .replace(/\b(?:porc|porcin[ăa]|pasare|păsare|pui|gaina|găină|mixt|mixte|mixed|chicken|svina|svin|куриц[аы]?|свин[ина]?|urgent|urgentă|de sunat din timp|nu a răspuns|vine la|unde îi spui)\b/giu,' ')
-   .replace(/[🚨📞⭐️+()\[\]{},:;.!?]+/gu,' ').replace(/\s+/g,' ').trim();
-  if(rest.length>1&&!/^(de duminică|pe marți|pe marti|urgent)$/i.test(rest))address=rest;
- }
- const client={phone,area:area||'',address,chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
+ // По импорту адрес не заполняем: сохраняем только распознанный населённый пункт и оригинал в примечании.
+ const address='';
+ const chefNotes=[...line.matchAll(/\(([^)]{2,})\)/g)].map(m=>m[1].trim()).filter(note=>/[\p{L}]/u.test(note)&&!/^\s*[+\d\s()./-]+\s*$/.test(note));
+ const client={phone,area:found?area:'',address:'',note:line,chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
  if(kind&&quantities.length){
   const q=quantities[0];const field=kind+(q.cans?'Cans':'Boxes');client[field]=q.qty;
  }else if(kind){
@@ -1909,7 +1894,7 @@ function importDeliveryList(){
  let added=0,updated=0,skipped=0;const now=new Date().toISOString();
  for(const item of parsedDeliveryClients){
   let existing=data.clients.find(c=>normalizePhone(c.phone)===normalizePhone(item.phone));
-  if(existing){Object.assign(existing,{phone:item.phone,area:item.area||existing.area||'',address:item.address||existing.address||'',active:true,updatedAt:now,importNote:item.importNote||'',deliveryOriginal:item.deliveryOriginal||item.phone,chickenBoxes:Number(item.chickenBoxes)||0,chickenCans:Number(item.chickenCans)||0,porkBoxes:Number(item.porkBoxes)||0,porkCans:Number(item.porkCans)||0});
+  if(existing){Object.assign(existing,{phone:item.phone,area:item.area||existing.area||'',address:'',note:item.deliveryOriginal||item.note||existing.note||readClientNotes()[normalizePhone(existing.phone)]||'',active:true,updatedAt:now,importNote:item.importNote||'',deliveryOriginal:item.deliveryOriginal||item.phone,chickenBoxes:Number(item.chickenBoxes)||0,chickenCans:Number(item.chickenCans)||0,porkBoxes:Number(item.porkBoxes)||0,porkCans:Number(item.porkCans)||0});
    updated++;
   }else{data.clients.unshift({id:makeId(),...item,createdAt:now,updatedAt:now});added++}
  }
@@ -1919,18 +1904,18 @@ el('toggleImportClients').addEventListener('click',()=>{const body=el('importCli
 el('copyUndelivered').addEventListener('click',async()=>{const text=undeliveredReportText();try{await navigator.clipboard.writeText(text);toast('Список невыполненных заказов скопирован')}catch(e){const ta=document.createElement('textarea');ta.value=text;document.body.appendChild(ta);ta.select();const ok=document.execCommand('copy');ta.remove();toast(ok?'Список невыполненных заказов скопирован':'Не удалось скопировать список')}});
 el('previewDeliveryList').addEventListener('click',previewDeliveryList);el('importDeliveryClients').addEventListener('click',importDeliveryList);
 
-initLocalitySuggestions();loadAllMoldovaLocalities();el('customerArea').addEventListener('input',renderLocalityMatches);el('customerArea').addEventListener('change',()=>{el('localityMatches').style.display='none'});el('showAddClient').addEventListener('click',openClientForm);el('closeClientForm').addEventListener('click',closeClientForm);el('customerPhone').addEventListener('input',renderClientSuggestions);el('clientSearch').addEventListener('input',renderClients);el('cancelCustomerEdit').addEventListener('click',resetClientForm);
+initLocalitySuggestions();loadAllMoldovaLocalities();el('customerArea').addEventListener('input',renderLocalityMatches);el('customerArea').addEventListener('change',()=>{el('localityMatches').style.display='none'});el('showAddClient').addEventListener('click',openClientForm);el('closeClientForm').addEventListener('click',closeClientForm);el('customerPhone').addEventListener('input',renderClientSuggestions);el('customerNote').addEventListener('input',()=>{if(!editingClientId)return;const c=data.clients.find(x=>String(x.id)===String(editingClientId));if(!c)return;c.note=el('customerNote').value;try{const notes=readClientNotes(),key=normalizePhone(c.phone);if(key){if(c.note.trim())notes[key]=c.note.trim();else delete notes[key];localStorage.setItem(CLIENT_NOTES_KEY,JSON.stringify(notes))}}catch(e){}});el('clientSearch').addEventListener('input',renderClients);el('cancelCustomerEdit').addEventListener('click',resetClientForm);
 ['customerChickenBoxes','customerChickenCans','customerPorkBoxes','customerPorkCans'].forEach(id=>el(id).addEventListener('input',updateCustomerOrderPreview));
 el('saveCustomer').addEventListener('click',()=>{
- const phone=el('customerPhone').value.trim(),phoneDigits=normalizePhone(phone),address=el('customerAddress').value.trim(),area=el('customerArea').value.trim();
+ const phone=el('customerPhone').value.trim(),phoneDigits=normalizePhone(phone),address=el('customerAddress').value.trim(),area=el('customerArea').value.trim(),note=el('customerNote').value.trim();
  if(phoneDigits.length<7){toast('Введи корректный номер телефона');el('customerPhone').focus();return}
  if(!area.trim()){toast('Выбери или введи город, село или район');el('customerArea').focus();return}
  const order={chickenBoxes:num('customerChickenBoxes'),chickenCans:num('customerChickenCans'),porkBoxes:num('customerPorkBoxes'),porkCans:num('customerPorkCans')};
  let client=data.clients.find(c=>normalizePhone(c.phone)===phoneDigits);
  if(client&&String(client.id)!==String(editingClientId)){selectClientForForm(client.id);toast('Этот номер уже сохранён — открыл его заказ');return}
  const now=new Date().toISOString();
- if(editingClientId){client=data.clients.find(c=>String(c.id)===String(editingClientId));if(client)Object.assign(client,{phone,area,address,...order,active:true,updatedAt:now})}
- else{client={id:makeId(),phone,area,address,...order,active:true,createdAt:now};data.clients.unshift(client)}
+ if(editingClientId){client=data.clients.find(c=>String(c.id)===String(editingClientId));if(client)Object.assign(client,{phone,area,address,note,...order,active:true,updatedAt:now})}
+ else{client={id:makeId(),phone,area,address,note,...order,active:true,createdAt:now};data.clients.unshift(client)}
  saveData();closeClientForm();selectedClientDistrict=area;renderClients();toast('Клиент добавлен в список');
 });
 function renderDashboard(){
@@ -1940,7 +1925,7 @@ function renderDashboard(){
  el('dashboardDate').textContent=new Date().toLocaleDateString('ru-RU',{day:'2-digit',month:'short'}).toUpperCase();
  const totalCans=data.stock.chicken+data.stock.pork;
  const fullBoxes=Math.floor(totalCans/BOX_SIZE),looseCans=totalCans%BOX_SIZE;
- const updates={dashStock:fullBoxes+' ящиков'+(looseCans?' + '+looseCans+' бан.':''),dashSales:money(t.total),dashCash:money(t.cash),dashCard:money(t.card),homeChickenStock:stockLabel(data.stock.chicken),homePorkStock:stockLabel(data.stock.pork)};
+ const updates={dashStock:fullBoxes+' ящиков'+(looseCans?' + '+looseCans+' бан.':''),dashSales:money(t.total),dashCash:money(t.cash),dashCard:money(t.card),dashClients:data.clients.filter(c=>c.active!==false).length,homeChickenStock:stockLabel(data.stock.chicken),homePorkStock:stockLabel(data.stock.pork)};
  Object.entries(updates).forEach(([id,value])=>{const node=el(id);if(node.textContent!==value){node.textContent=value;const holder=node.closest('.stat,.stockline');if(holder){holder.classList.remove('bump');void holder.offsetWidth;holder.classList.add('bump')}}});
 }
 
