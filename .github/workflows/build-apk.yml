@@ -41,6 +41,6 @@ jobs:
         if: success()
         uses: actions/upload-artifact@v4
         with:
-          name: tushenka-apk
+          name: soshenka-apk
           path: TushenkaAPK/app/build/outputs/apk/debug/app-debug.apk
           if-no-files-found: error
