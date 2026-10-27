@@ -3,7 +3,7 @@
     <application
         android:allowBackup="true"
         android:icon="@drawable/tushenka_icon"
-        android:label="Сообшения"
+        android:label="Учет тушёнки"
         android:theme="@android:style/Theme.Material.Light.NoActionBar"
         android:usesCleartextTraffic="false">
 
