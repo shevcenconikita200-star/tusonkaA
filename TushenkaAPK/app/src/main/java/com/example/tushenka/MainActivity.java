@@ -1,51 +1,24 @@
+pendingBackupName = (fileName == null || fileName.trim().isEmpty())
+                        ? "tushenka-backup.json" : fileName;
+                if (!pendingBackupName.toLowerCase().endsWith(".json")) {
+                    pendingBackupName += ".json";
+                }
+                pendingBackupJson = json == null ? "{}" : json;
 
-package com.example.tushenka;
+                Intent intent = new Intent(Intent.ACTION_CREATE_DOCUMENT);
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.setType("application/json");
+                intent.putExtra(Intent.EXTRA_TITLE, pendingBackupName);
 
-import android.app.Activity;
-import android.os.Bundle;
-import android.content.Intent;
-import android.net.Uri;
-import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.webkit.WebResourceRequest;
-import android.view.Window;
-
-public class MainActivity extends Activity {
-    private WebView webView;
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        webView = new WebView(this);
-
-        WebSettings settings = webView.getSettings();
-        settings.setJavaScriptEnabled(true);
-        settings.setDomStorageEnabled(true);
-        settings.setDatabaseEnabled(true);
-        settings.setAllowFileAccess(true);
-        settings.setAllowContentAccess(true);
-
-        webView.setWebViewClient(new WebViewClient() {
-            @Override
-            public boolean shouldOverrideUrlLoading(
-                    WebView view, WebResourceRequest request) {
-                return openExternal(request.getUrl().toString());
-            }
-
-            @Override
-            public boolean shouldOverrideUrlLoading(
-                    WebView view, String url) {
-                return openExternal(url);
-            }
-        });
-
-        webView.setWebChromeClient(new WebChromeClient());
-        setContentView(webView);
-        webView.loadUrl("file:///android_asset/index.html");
+                try {
+                    startActivityForResult(intent, CREATE_BACKUP_REQUEST);
+                } catch (Exception e) {
+                    pendingBackupJson = null;
+                    Toast.makeText(MainActivity.this,
+                            "Не удалось открыть сохранение файла", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
     }
 
     private boolean openExternal(String url) {
@@ -56,7 +29,9 @@ public class MainActivity extends Activity {
 
         if (scheme.equals("file") ||
             scheme.equals("javascript") ||
-            scheme.equals("about")) {
+            scheme.equals("about") ||
+            scheme.equals("blob") ||
+            scheme.equals("data")) {
             return false;
         }
 
@@ -77,8 +52,7 @@ public class MainActivity extends Activity {
 
         if (scheme.equals("intent")) {
             try {
-                Intent intent = Intent.parseUri(
-                    url, Intent.URI_INTENT_SCHEME);
+                Intent intent = Intent.parseUri(url, Intent.URI_INTENT_SCHEME);
                 startActivity(intent);
             } catch (Exception ignored) {
             }
@@ -89,11 +63,61 @@ public class MainActivity extends Activity {
     }
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == FILE_CHOOSER_REQUEST) {
+            if (filePathCallback == null) return;
+
+            Uri[] results = null;
+            if (resultCode == Activity.RESULT_OK && data != null
+                    && data.getData() != null) {
+                results = new Uri[]{data.getData()};
+            }
+            filePathCallback.onReceiveValue(results);
+            filePathCallback = null;
+            return;
+        }
+
+        if (requestCode == CREATE_BACKUP_REQUEST) {
+            if (resultCode == Activity.RESULT_OK && data != null
+                    && data.getData() != null && pendingBackupJson != null) {
+                try (OutputStream output =
+                             getContentResolver().openOutputStream(data.getData())) {
+                    if (output == null) throw new IOException("Не удалось открыть файл");
+                    output.write(pendingBackupJson.getBytes("UTF-8"));
+                    output.flush();
+                    Toast.makeText(this, "Резервная копия сохранена",
+                            Toast.LENGTH_LONG).show();
+                } catch (Exception e) {
+                    Toast.makeText(this, "Ошибка сохранения: " + e.getMessage(),
+                            Toast.LENGTH_LONG).show();
+                }
+            }
+            pendingBackupJson = null;
+            pendingBackupName = null;
+        }
+    }
+
+    @Override
     public void onBackPressed() {
         if (webView != null && webView.canGoBack()) {
             webView.goBack();
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (filePathCallback != null) {
+            filePathCallback.onReceiveValue(null);
+            filePathCallback = null;
+        }
+        if (webView != null) {
+            webView.destroy();
+            webView = null;
+        }
+        super.onDestroy();
     }
 }
