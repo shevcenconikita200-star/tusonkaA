@@ -1941,7 +1941,7 @@ function parseDeliveryLine(raw){
  if(/porc|svin|свин|porcina|carneporc/.test(productText))kind='pork';
  else if(/pasare|pui|gaina|chicken|куриц|gain|carnepui/.test(productText))kind='chicken';
  // Find quantities with their units. If a line contains a clear cans/unit marker, record cans; otherwise boxes.
- const qtyRegex=/(\d{1,3})\s*(cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|buc(?:ati|ăți)?|buc\.?|banca|bănci|бан(?:ка|ки|ок)?|ящик(?:а|ов)?|ящ\.?|шт\.?|bani?)(?![\p{L}])/giu;
+ const qtyRegex=/(\d{1,3})\s*(cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|buc(?:ati|ăți)?|buc\.?|borcan(?:e)?|banca|bănci|бан(?:ка|ки|ок)?|ящик(?:а|ов)?|ящ\.?|шт\.?|bani?)(?![\p{L}])/giu;
  const quantities=[];let qm;
  while((qm=qtyRegex.exec(line))!==null){
   const unit=normalizePlace(qm[2]);
@@ -1956,26 +1956,29 @@ function parseDeliveryLine(raw){
  // Match the longest known place name regardless of accents, punctuation, or whether it is written in Romanian/Russian.
  let area='';
  const aliases=[
-  ['Chișinău','Кишинёв'],['Chisinau','Кишинёв'],['Кишинев','Кишинёв'],['Anenii Noi','Новые Анены'],['Bălți','Бельцы'],['Balti','Бельцы'],['Bender','Бендеры'],['Tighina','Бендеры'],['Căușeni','Каушаны'],['Causeni','Каушаны'],['Călărași','Калараш'],['Calarasi','Калараш'],['Ștefan Vodă','Штефан-Водэ'],['Stefan Voda','Штефан-Водэ'],['Ceadîr-Lunga','Чадыр-Лунга'],['Ceadir-Lunga','Чадыр-Лунга'],['Vulcănești','Вулканешты'],['Vulcanesti','Вулканешты'],['Rîbnița','Рыбница'],['Ribnita','Рыбница'],['Dubăsari','Дубоссары'],['Dubasari','Дубоссары'],['Dondușeni','Дондюшаны'],['Donduseni','Дондюшаны'],['Edineț','Единцы'],['Edinet','Единцы'],['Fălești','Фалешты'],['Falesti','Фалешты'],['Florești','Флорешты'],['Floresti','Флорешты'],['Hîncești','Хынчешты'],['Hincesti','Хынчешты'],['Ialoveni','Яловены'],['Ocnița','Окница'],['Ocnita','Окница'],['Rîșcani','Рышканы'],['Riscani','Рышканы'],['Sîngerei','Сынжерей'],['Singerei','Сынжерей'],['Șoldănești','Шолданешты'],['Soldanesti','Шолданешты'],['Strășeni','Стрэшены'],['Straseni','Стрэшены'],['Telenești','Теленешты'],['Telenesti','Теленешты'],['Comrat','Комрат'],['Tiraspol','Тирасполь'],['Soroca','Сороки'],['Orhei','Оргеев'],['Ungheni','Унгены'],['Cahul','Кагул'],['Criuleni','Криулень'],['Drochia','Дрокия'],['Glodeni','Глодяны'],['Nisporeni','Ниспорены'],['Basarabeasca','Басарабяска'],['Cimișlia','Чимишлия'],['Cimislia','Чимишлия'],['Briceni','Бричаны'],['Cantemir','Кантемир'],['Leova','Леова'],['Taraclia','Тараклия'],['Cricova','Крикова'],['Peresecina','Пересечина'],['Peresečina','Пересечина'],['Peresecina sat','Пересечина'],['Noroceni','Норочены'],['Ciocîlteni','Чокылтень'],['Ciocilteni','Чокылтень'],['Rădoaia','Рэдоая'],['Radoaia','Рэдоая'],['Domulgeni','Домулжень'],['Chetrosu','Кетросу'],['Moara de Piatră','Моара-де-Пятрэ'],['Moara de Piatra','Моара-де-Пятрэ'],['Sărata Veche','Сэрата-Веке'],['Sarata Veche','Сэрата-Веке'],['Gura Camencii','Гура-Каменчий'],['Durlești','Дурлешты'],['Durlești','Дурлешты'],['Sîngera','Сынжера'],['Singera','Сынжера'],['Stăuceni','Ставчены'],['Stauceni','Ставчены'],['Trușeni','Трушень'],['Truseni','Трушень'],['Bubuieci','Бубуечь'],['Budești','Будешты'],['Budesti','Будешты'],['Băcioi','Бачой'],['Bacioi','Бачой'],['Grătiești','Гратиешты'],['Gratiesti','Гратиешты'],['Ghidighici','Гидигич'],['Ghidhighici','Гидигич'],['Poșta Veche','Старая Почта'],['Posta Veche','Старая Почта'],['Buiucani','Буюканы'],['Botanica','Ботаника'],['Ciocana','Чеканы'],['Centru','Центр'],['Telecentru','Телецентр'],['Sculeanca','Скулянка'],['Vadul lui Vodă','Вадул-луй-Водэ'],['Vadul-lui-Vodă','Вадул-луй-Водэ'],['Colonița','Колоница'],['Cruzești','Крузешты'],['Ciorescu','Чореску']
+  ['municipiulchisinau','Кишинёв'],['orasulchisinau','Кишинёв'],['munchisinau','Кишинёв'],['chișinău','Кишинёв'],['chisinau','Кишинёв'],['chisinău','Кишинёв'],['kishinev','Кишинёв'],['кишинев','Кишинёв'],['кишинёв','Кишинёв'],['кишинэу','Кишинёв'],['кишинэу','Кишинёв'],['кишиневскийрайон','Кишинёв'],['районкишинев','Кишинёв'],['районкишинёв','Кишинёв'],['Кишинев','Кишинёв'],['Кишинёв','Кишинёв'],['muncești','Мунчешть'],['muncesti','Мунчешть'],['munceștii','Мунчешть'],['munceştii','Мунчешть'],['Muncești','Мунчешть'],['Muncesti','Мунчешть'],['munceştii','Мунчешть'],['muncestii','Мунчешть'],['мунчешть','Мунчешть'],['мунчешти','Мунчешть'],['Petricani','Петрикань'],['petrican','Петрикань'],['Петрикань','Петрикань'],['Петрикан','Петрикань'],['Piața de Flori','Пяца ди Флорь'],['Piata de Flori','Пяца ди Флорь'],['Piața di Flori','Пяца ди Флорь'],['Piata di Flori','Пяца ди Флорь'],['Piata Florilor','Пяца ди Флорь'],['Пяца ди Флорь','Пяца ди Флорь'],['Anenii Noi','Новые Анены'],['Bălți','Бельцы'],['Balti','Бельцы'],['Bender','Бендеры'],['Tighina','Бендеры'],['Căușeni','Каушаны'],['Causeni','Каушаны'],['Călărași','Калараш'],['Calarasi','Калараш'],['Ștefan Vodă','Штефан-Водэ'],['Stefan Voda','Штефан-Водэ'],['Ceadîr-Lunga','Чадыр-Лунга'],['Ceadir-Lunga','Чадыр-Лунга'],['Vulcănești','Вулканешты'],['Vulcanesti','Вулканешты'],['Rîbnița','Рыбница'],['Ribnita','Рыбница'],['Dubăsari','Дубоссары'],['Dubasari','Дубоссары'],['Dondușeni','Дондюшаны'],['Donduseni','Дондюшаны'],['Edineț','Единцы'],['Edinet','Единцы'],['Fălești','Фалешты'],['Falesti','Фалешты'],['Florești','Флорешты'],['Floresti','Флорешты'],['Hîncești','Хынчешты'],['Hincesti','Хынчешты'],['Ialoveni','Яловены'],['Ocnița','Окница'],['Ocnita','Окница'],['Rîșcani','Рышканы'],['Riscani','Рышканы'],['Sîngerei','Сынжерей'],['Singerei','Сынжерей'],['Șoldănești','Шолданешты'],['Soldanesti','Шолданешты'],['Strășeni','Стрэшены'],['Straseni','Стрэшены'],['Telenești','Теленешты'],['Telenesti','Теленешты'],['Comrat','Комрат'],['Tiraspol','Тирасполь'],['Soroca','Сороки'],['Orhei','Оргеев'],['Ungheni','Унгены'],['Cahul','Кагул'],['Criuleni','Криулень'],['Drochia','Дрокия'],['Glodeni','Глодяны'],['Nisporeni','Ниспорены'],['Basarabeasca','Басарабяска'],['Cimișlia','Чимишлия'],['Cimislia','Чимишлия'],['Briceni','Бричаны'],['Cantemir','Кантемир'],['Leova','Леова'],['Taraclia','Тараклия'],['Cricova','Крикова'],['Peresecina','Пересечина'],['Peresečina','Пересечина'],['Peresecina sat','Пересечина'],['Noroceni','Норочены'],['Ciocîlteni','Чокылтень'],['Ciocilteni','Чокылтень'],['Rădoaia','Рэдоая'],['Radoaia','Рэдоая'],['Domulgeni','Домулжень'],['Chetrosu','Кетросу'],['Moara de Piatră','Моара-де-Пятрэ'],['Moara de Piatra','Моара-де-Пятрэ'],['Sărata Veche','Сэрата-Веке'],['Sarata Veche','Сэрата-Веке'],['Gura Camencii','Гура-Каменчий'],['Durlești','Дурлешты'],['Durlești','Дурлешты'],['Sîngera','Сынжера'],['Singera','Сынжера'],['Stăuceni','Ставчены'],['Stauceni','Ставчены'],['Trușeni','Трушень'],['Truseni','Трушень'],['Bubuieci','Бубуечь'],['Budești','Будешты'],['Budesti','Будешты'],['Băcioi','Бачой'],['Bacioi','Бачой'],['Grătiești','Гратиешты'],['Gratiesti','Гратиешты'],['Ghidighici','Гидигич'],['Ghidhighici','Гидигич'],['Poșta Veche','Старая Почта'],['Posta Veche','Старая Почта'],['Buiucani','Буюканы'],['Botanica','Ботаника'],['Ciocana','Чеканы'],['Centru','Центр'],['Telecentru','Телецентр'],['Sculeanca','Скулянка'],['Vadul lui Vodă','Вадул-луй-Водэ'],['Vadul-lui-Vodă','Вадул-луй-Водэ'],['Colonița','Колоница'],['Cruzești','Крузешты'],['Ciorescu','Чореску']
  ];
  const aliasMap=new Map();
  for(const [a,c] of aliases)aliasMap.set(normalizePlace(a),c);
  for(const name of localities){const key=normalizePlace(name);if(key.length>=4&&!aliasMap.has(key))aliasMap.set(key,name)}
  const found=[...aliasMap.entries()].filter(([key])=>key.length>=4&&normalized.includes(key)).sort((a,b)=>b[0].length-a[0].length)[0];
- if(found)area=localityToRussian(found[1]);
+ // Явно ловим Кишинёв/Chișinău даже если в строке написано «район Кишинёв» или есть добавочные слова.
+ const cityMatch=/(?:кишинев|кишинёв|кишинэу|chisinau|kishinev|municipiulchisinau|orasulchisinau|raionulchisinau|raionchisinau)/u.test(normalized);
+ if(cityMatch){area='Кишинёв';}
+ else if(found)area=localityToRussian(found[1]);
  // По импорту адрес не заполняем: сохраняем только распознанный населённый пункт и оригинал в примечании.
  const address='';
  const chefNotes=[...line.matchAll(/\(([^)]{2,})\)/g)].map(m=>m[1].trim()).filter(note=>/[\p{L}]/u.test(note)&&!/^\s*[+\d\s()./-]+\s*$/.test(note));
- const client={phone,area:found?area:'',address:'',note:line,chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
+ const client={phone,area:area|| (found?localityToRussian(found[1]):''),address:'',note:line,chickenBoxes:0,chickenCans:0,porkBoxes:0,porkCans:0,active:true};
  // Разбираем курицу и свинину независимо. 13/26 без единицы рядом с видом — количество банок.
- const chickenRe='(?:куриц[аыуеы]?|курочка|pui|g[aă]in[aă]?|pas[aă]re|gain|chicken|carne\\s*pui)';
+ const chickenRe='(?:куриц[аыуеы]?|курочка|pui|g[aă]in[aă]?|pas[aă]re|past[aă]r[iy]|p[aă]st[aă]r[iy]|past[aă]re|p[aă]st[aă]re|gain|chicken|carne\\s*pui)';
  const porkRe='(?:свин[инаьюеы]*|porc(?:ina)?|carne\\s*porc|svinina)';
- const unitRe='(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\\.?|бан(?:ка|ки|ок)?|buc(?:ati|ăți)?|buc\\.?|banca|bănci|шт\\.?)';
+ const unitRe='(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\\.?|бан(?:ка|ки|ок)?|buc(?:ati|ăți)?|buc\\.?|borcan(?:e)?|banca|bănci|шт\\.?)';
  function productQty(re){
   // Для каждого упоминания вида ищем количество непосредственно перед ним
   // (например, «5 cutii porc»), а если его нет — сразу после («porc 5 cutii»).
   const productRegex=new RegExp(re,'giu');
-  const unitPattern='(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\\.?|бан(?:ка|ки|ок)?|buc(?:ati|ăți)?|buc\\.?|banca|bănci|шт\\.?)';
+  const unitPattern='(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\\.?|бан(?:ка|ки|ок)?|buc(?:ati|ăți)?|buc\\.?|borcan(?:e)?|banca|bănci|шт\\.?)';
   const unitRegex=new RegExp('('+unitPattern+')','iu');
   const candidates=[];let pm;
   while((pm=productRegex.exec(line))!==null){
@@ -1984,7 +1987,7 @@ function parseDeliveryLine(raw){
    const bm=before.match(beforeRe);
    if(bm){
     const qty=parseInt(bm[1],10)||0,unit=normalizePlace(bm[2]);
-    if(qty>0)candidates.push({qty,cans:/banc|ban|buc|шт/.test(unit),priority:0,distance:pm.index-(Math.max(0,pm.index-32)+bm.index+bm[0].length)});
+    if(qty>0)candidates.push({qty,cans:/borcan|banc|ban|buc|шт/.test(unit),priority:0,distance:pm.index-(Math.max(0,pm.index-32)+bm.index+bm[0].length)});
     continue;
    }
    const after=line.slice(pm.index+pm[0].length,Math.min(line.length,pm.index+pm[0].length+28));
@@ -1992,7 +1995,7 @@ function parseDeliveryLine(raw){
    const am=after.match(afterRe);
    if(am){
     const qty=parseInt(am[1],10)||0,unit=normalizePlace(am[2]||'');
-    if(qty>0)candidates.push({qty,cans:/banc|ban|buc|шт/.test(unit)||(!unit&&qty>=13&&qty%13===0),priority:1,distance:am.index+am[0].length});
+    if(qty>0)candidates.push({qty,cans:/borcan|banc|ban|buc|шт/.test(unit),priority:1,distance:am.index+am[0].length});
    }
   }
   if(!candidates.length)return {found:false,qty:0,cans:false};
@@ -2002,12 +2005,44 @@ function parseDeliveryLine(raw){
   return {found:true,qty:best.qty,cans:best.cans||(!/cutii?|cutie|lazi?|lada|box|ящик|ящ/i.test(line.slice(Math.max(0,line.indexOf(String(best.qty))-5),line.indexOf(String(best.qty))+String(best.qty).length+12))&&best.qty>=13&&best.qty%13===0)};
  }
  const cq=productQty(chickenRe),pq=productQty(porkRe);
+ // Количество без явного указания банок/штук — это ящики. Поддерживаем числительные 1–10 на русском и румынском.
+ const numberWords={un:1,uno:1,una:1,o:1,unu:1,doi:2,doua:2,doua:2,trei:3,patru:4,cinci:5,sase:6,sapte:7,opt:8,noua:9,zece:10,один:1,одна:1,одно:1,одну:1,два:2,две:2,три:3,четыре:4,четыре:4,пять:5,шесть:6,семь:7,восемь:8,девять:9,десять:10};
+ function wordQuantity(re){
+  const product=re===porkRe ? /(?:porc(?:ina)?|carne\s*porc|svinina|свин[инаьюеы]*)/giu : /(?:pui|g[aă]in[aă]?|pas[aă]re|pas[yș]ri|p[aă]s[yș]ri|p[aă]s[aă]ri|past[aă]r[iy]|p[aă]st[aă]r[iy]|past[aă]re|p[aă]st[aă]re|gain|chicken|куриц[аыуеы]?|курочка)/giu;
+  let m; while((m=product.exec(line))!==null){
+   const before=line.slice(Math.max(0,m.index-24),m.index);
+   const after=line.slice(m.index+m[0].length,Math.min(line.length,m.index+m[0].length+24));
+   const b=before.match(/(?:^|[^\p{L}])(un|uno|una|unu|o|doi|doua|trei|patru|cinci|sase|sapte|opt|noua|zece|один|одна|одно|одну|два|две|три|четыре|пять|шесть|семь|восемь|девять|десять)\s*$/iu);
+   const a=after.match(/^\s*(un|uno|una|unu|o|doi|doua|trei|patru|cinci|sase|sapte|opt|noua|zece|один|одна|одно|одну|два|две|три|четыре|пять|шесть|семь|восемь|девять|десять)(?:$|[^\p{L}])/iu);
+   const w=(b||a)?.[1]; if(w){const key=normalizePlace(w); if(numberWords[key])return numberWords[key];}
+  } return 0;
+ }
+ function implicitSingle(re){
+  // A single item must be stated next to this product; never infer it from digits in a phone number.
+  const product=re===porkRe
+    ? /(?:porc(?:ina)?|carne\s*porc|svinina|свин[инаьюеы]*)/giu
+    : /(?:pui|g[aă]in[aă]?|pas[aă]re|pas[yș]ri|p[aă]s[yș]ri|p[aă]s[aă]ri|past[aă]r[iy]|p[aă]st[aă]r[iy]|past[aă]re|p[aă]st[aă]re|gain|chicken|куриц[аыуеы]?|курочка)/giu;
+  const unitPattern=/(?:cutii?|cutie|lazi?|lada|lăzi|ladă|box(?:e|es)?|ящик(?:а|ов)?|ящ\.?|бан(?:ка|ки|ок)?|buc(?:ati|ăți)?|buc\.?|borcan(?:e)?|banca|bănci|шт\.?)/iu;
+  if(unitPattern.test(line))return false;
+  let m;
+  while((m=product.exec(line))!==null){
+    const before=line.slice(Math.max(0,m.index-12),m.index);
+    const after=line.slice(m.index+m[0].length,Math.min(line.length,m.index+m[0].length+12));
+    if(/(?:^|[^\p{L}])(?:1|un|uno|una|unu|o|один|одна)\s*$/iu.test(before) ||
+       /^\s*(?:1|un|uno|una|unu|o|один|одна)(?:$|[^\p{L}])/iu.test(after)) return true;
+  }
+  return false;
+ }
+ if(!pq.found){const n=wordQuantity(porkRe);if(n){pq.found=true;pq.qty=n;pq.cans=false;}else if(implicitSingle(porkRe)){pq.found=true;pq.qty=1;pq.cans=false;}}
+ if(!cq.found){const n=wordQuantity(chickenRe);if(n){cq.found=true;cq.qty=n;cq.cans=false;}else if(implicitSingle(chickenRe)){cq.found=true;cq.qty=1;cq.cans=false;}}
+ // Румынская диктовка: «o cutie/o cutii pasari» означает один ящик курицы.
+ if(!cq.found && /\bo\s+cuti(?:e|i)\s+(?:pas[aă]re|pas[yș]ri|p[aă]s[yș]ri|p[aă]s[aă]ri|pui|g[aă]in[aă]?)\b/iu.test(normalizePlace(line))){cq.found=true;cq.qty=1;cq.cans=false;}
  function assign(kind,q){if(!q.found)return;client[kind+(q.cans?'Cans':'Boxes')]=q.qty;}
  assign('chicken',cq);assign('pork',pq);
  // Общие «2 ящика» без вида означают 1 курица + 1 свинина.
  if(!cq.found&&!pq.found){
   const genericRe=new RegExp('(\\d{1,3})\\s*('+unitRe+')','giu');let m;
-  while((m=genericRe.exec(line))!==null){const qty=parseInt(m[1],10)||0,u=normalizePlace(m[2]);if(!qty)continue;const cans=/banc|ban|buc|шт/.test(u),boxes=/cutii?|cutie|lazi?|lada|box|ящик|ящ/.test(u);if(cans){client.chickenCans=qty;break;}if(boxes){if(qty===2){client.chickenBoxes=1;client.porkBoxes=1;}else{client.chickenBoxes=Math.ceil(qty/2);client.porkBoxes=Math.floor(qty/2);}break;}}
+  while((m=genericRe.exec(line))!==null){const qty=parseInt(m[1],10)||0,u=normalizePlace(m[2]);if(!qty)continue;const cans=/borcan|banc|ban|buc|шт/.test(u),boxes=/cutii?|cutie|lazi?|lada|box|ящик|ящ/.test(u);if(cans){client.chickenCans=qty;break;}if(boxes){if(qty===2){client.chickenBoxes=1;client.porkBoxes=1;}else{client.chickenBoxes=Math.ceil(qty/2);client.porkBoxes=Math.floor(qty/2);}break;}}
  }
  const summary=[];if(client.chickenBoxes||client.chickenCans)summary.push('курица: '+client.chickenBoxes+' ящ. + '+client.chickenCans+' бан.');if(client.porkBoxes||client.porkCans)summary.push('свинина: '+client.porkBoxes+' ящ. + '+client.porkCans+' бан.');
  client.importNote=summary.join(' · ')||((quantities.length?quantities.map(q=>q.qty+' '+(q.cans?'бан.':'ящ.')).join(' + '):'')+(kind?' · '+(kind==='chicken'?'курица':'свинина'):''));
